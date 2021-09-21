@@ -80,3 +80,6 @@ TODO (Dockerizar)
 
 ## Licencia:
 [GPL-3.0](LICENSE)
+
+## Guía de contribución
+Si desea contribuir con el proyecto por favor, lea nuestra [Guía de contribución](CONTRIBUTING.md)
