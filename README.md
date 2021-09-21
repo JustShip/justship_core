@@ -77,9 +77,11 @@ Abre tu navegador en http://localhost:8000 y verás el sitio ejecutándose
 TODO (Dockerizar)
 
 Para crear la imagen de Docker:
-    docker build --tag django_todo:latest .
+
+     docker build --tag django_todo:latest .
 
 Para crear y correr la imagen de docker:
+
     docker run --name django_todo -d -p 8000:8000 django_todo:latest
 
 ## Contribuidores:
