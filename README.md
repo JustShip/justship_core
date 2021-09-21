@@ -5,7 +5,7 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/justship/justshipto_core)
 
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/JustShip?logo=sponsors)
-![GitHub](https://img.shields.io/github/license/JustShip/justshipto_core)
+![GitHub](https://img.shields.io/github/license/justship/justshipto_core)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/JustShip/justshipto_core)
 ![GitHub last commit](https://img.shields.io/github/last-commit/JustShip/justshipto_core)
 ![GitHub contributors](https://img.shields.io/github/contributors/JustShip/justshipto_core)
@@ -89,3 +89,11 @@ Para detener la imagen de docker:
 
 ## Contribuidores:
 
+## Licencia:
+[GPL-3.0](LICENSE)
+
+## Guía de contribución
+Si desea contribuir con el proyecto por favor, lea nuestra [Guía de contribución](CONTRIBUTING.md)
+
+## Código de conducta
+[Código de conducta](CODE_OF_CONDUCT.md)
