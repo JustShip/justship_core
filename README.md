@@ -83,3 +83,6 @@ TODO (Dockerizar)
 
 ## Guía de contribución
 Si desea contribuir con el proyecto por favor, lea nuestra [Guía de contribución](CONTRIBUTING.md)
+
+## Código de conducta
+[Código de conducta](CODE_OF_CONDUCT.md)
