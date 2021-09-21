@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+
+class ErrorView(generic.ListView):
+    def dispatch(self, request, *args, **kwargs):
+        raise Exception('Error view')
