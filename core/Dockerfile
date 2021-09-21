@@ -15,6 +15,6 @@ RUN pip install -r develop.txt
 
 # copy project
 COPY . /usr/src/app
+RUN chmod +x /usr/src/docker-entrypoint.sh
 
-
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT [ "/usr/src/docker-entrypoint.sh" ]
