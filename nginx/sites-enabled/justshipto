@@ -2,7 +2,7 @@
 server {
 
     listen 80;
-    server_name example.org;
+    server_name api.justship.to;
     charset utf-8;
 
     location /static {
