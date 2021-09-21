@@ -1,0 +1,4 @@
+-r base.txt # includes the base.txt requirements file
+
+Sphinx==4.2.0
+coverage==5.5
