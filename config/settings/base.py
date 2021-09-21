@@ -8,7 +8,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 def get_env_variable(var_name):
@@ -28,13 +28,13 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'justshipto_core.accounts.apps.AccountsConfig',
 ]
 
 THIRD_PARTY_APPS = []
 
 LOCAL_APPS = [
-    'justshipto_core.core'
+    'justshipto_core.core.apps.CoreConfig',
+    'justshipto_core.accounts.apps.AccountsConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'justshipto_core.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
