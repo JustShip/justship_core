@@ -38,9 +38,27 @@ Este proyecto es de la comunidad para la comunidad
 
 
 ## Ejecutar
+Ejecutar el proyecto localmente
+### Instalar dependencias
+Para instalar las dependencias solo debe ejecutar:
+
+    pip install -r requirements/develop.txt
+
+### Base de datos
+Este proyecto en modo desarrollo usa SQlite por lo que solo tienes que ejecutar las migraciones:
+
+    python manage.py migrate
+Después creas un usuario administrador:
+
+    python manage.py createsuperuser
+Rellenas toda la información que te pide y ya está listo para ejecutar:
+
+    python manage.py runserver
+Abre tu navegador en http://localhost:8000 y verás el sitio ejecutándose
+
 
 ## Desplegar
-TODO
+TODO (Dockerizar)
 
 ## Contribuidores:
 
