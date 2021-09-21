@@ -98,9 +98,10 @@ Para crear la imagen de Docker:
 Para crear y correr la imagen de docker:
 
     docker-compose up  # para ejecutarlo en segundo plano hay que agregar -d
+
 Para detener la imagen de docker:
 
-    docker-compose down
+    docker-compose down  
 
 ## Contribuidores:
 
