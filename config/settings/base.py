@@ -28,13 +28,13 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts.apps.AccountsConfig',
+    'justshipto_core.accounts.apps.AccountsConfig',
 ]
 
 THIRD_PARTY_APPS = []
 
 LOCAL_APPS = [
-    'core'
+    'justshipto_core.core'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
