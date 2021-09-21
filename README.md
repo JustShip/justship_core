@@ -77,6 +77,8 @@ Abre tu navegador en http://localhost:8000 y verás el sitio ejecutándose
 Este proyecto está dockerizado por lo que solo se deben crear las variables de entorno y levantar el contenedor
 
 ### Variables de entorno
+Crea un fichero `.env` en la raíz del proyecto y agrega estas variables de entorno:
+
 - `SECRET_KEY` Firma criptográfica que usa Django para encriptar contraseñas y otros elementos de seguridad
 - `DB_NAME` nombre de la base de datos
 - `DB_HOST` dirección del host de la base de datos
@@ -91,11 +93,11 @@ Este proyecto está dockerizado por lo que solo se deben crear las variables de 
 ### Ejecutar Docker
 Para crear la imagen de Docker:
 
-     docker-composer build --tag django_todo:latest .
+     docker-composer build --tag justshipto_core:1.0 .
 
 Para crear y correr la imagen de docker:
 
-    docker-compose up
+    docker-compose up  # para ejecutarlo en segundo plano hay que agregar -d
 Para detener la imagen de docker:
 
     docker-compose down
