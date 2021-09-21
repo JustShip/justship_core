@@ -1,6 +1,8 @@
 # The JustShip Core
 > El nombre lo dice todo 🚀
 
+![Django CI](https://github.com/JustShip/justshipto_core/actions/workflows/django.yml/badge.svg)
+
 Núcleo de [Just Ship](https://justship.to).
 
 Si deseas conocer sobre que va este proyecto te recomiendo que leas [este artículo](https://medium.com/justship/de-la-idea-al-producto-justship-fd5d9fd3ae83)
