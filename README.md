@@ -1,9 +1,12 @@
 # The JustShip Core
+> El nombre lo dice todo 🚀
+
 Núcleo de [Just Ship](https://justship.to).
 
-Si deseas conocer sobre que va este proyecto te recomiendo que leas [este artículo](https://medium.com/justship/de-la-idea-al-producto-justship-fd5d9fd3ae83).
+Si deseas conocer sobre que va este proyecto te recomiendo que leas [este artículo](https://medium.com/justship/de-la-idea-al-producto-justship-fd5d9fd3ae83)
+o visites nuestras [redes sociales](https://bio.link/justship).
 
-## Apoya este proyecto!
+## ¡Apoya este proyecto!
 Este proyecto es de la comunidad para la comunidad
 
 ## Estructura de carpetas:
