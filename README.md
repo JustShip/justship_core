@@ -78,11 +78,14 @@ TODO (Dockerizar)
 
 Para crear la imagen de Docker:
 
-     docker build --tag django_todo:latest .
+     docker-composer build --tag django_todo:latest .
 
 Para crear y correr la imagen de docker:
 
-    docker run --name django_todo -d -p 8000:8000 django_todo:latest
+    docker-compose up
+Para detener la imagen de docker:
+
+    docker-compose down
 
 ## Contribuidores:
 
