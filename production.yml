@@ -26,7 +26,7 @@ services:
 
   postgres:
     restart: always
-    image: postgres:latest
+    image: postgres:13.4-alpine
     ports:
       - "5432"
     volumes:
@@ -34,7 +34,7 @@ services:
 
   redis:
     restart: always
-    image: redis:latest
+    image: redis:6.2-alpine
     ports:
       - "6379"
     volumes:
