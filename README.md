@@ -93,7 +93,7 @@ Crea un fichero `.env` en la raíz del proyecto y agrega estas variables de ento
 ### Ejecutar Docker
 Para crear la imagen de Docker:
 
-     docker-composer build --tag justshipto_core:1.0 .
+     docker-compose build --tag justshipto_core:1.0 .
 
 Para crear y correr la imagen de docker:
 

@@ -27,4 +27,5 @@ jobs:
         pip install -r core/requirements/develop.txt
     - name: Run Tests
       run: |
-        python core/manage.py test
+        coverage run core/manage.py test core
+        coverage report

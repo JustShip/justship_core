@@ -30,7 +30,9 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    'graphene_django',
+]
 
 LOCAL_APPS = [
     'justshipto_core.core.apps.CoreConfig',
@@ -123,3 +125,8 @@ LANGUAGES = [
 ]
 
 ADMINS = [("Admin del sitio", "admin@justship.to"), ]
+
+# graphene configuration
+GRAPHENE = {
+    "SCHEMA": "config.schema.schema"
+}
