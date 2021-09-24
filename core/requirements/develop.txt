@@ -3,3 +3,4 @@
 Sphinx==4.2.0
 coverage==5.5
 pylint==2.11.1
+psycopg2-binary>=2.8

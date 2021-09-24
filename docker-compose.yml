@@ -1,49 +1,25 @@
-version: '3'
+version: '3.8'
 
 services:
-  core:
-    restart: always
+  web:
     build: ./core
-    expose:
-      - "8000"
-    links:
-      - postgres:postgres
-      - redis:redis
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - core-django:/usr/src/app
-      - core-static:/usr/src/app/static
-    env_file: .env
+      - ./core/:/usr/src/core/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     environment:
-    command: /usr/local/bin/gunicorn config.wsgi:application -w 2 -b :8000
-
-  nginx:
-    restart: always
-    build: ./nginx/
-    ports:
-      - "80:80"
-    volumes:
-      - core-static:/www/static
-    links:
-      - core:core
-
-  postgres:
-    restart: always
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
-
-  redis:
-    restart: always
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - redisdata:/data
+      - POSTGRES_USER=justshipto
+      - POSTGRES_PASSWORD=justshipto
+      - POSTGRES_DB=justshipto_dev
 
 volumes:
-  core-django:
-  core-static:
-  pgdata:
-  redisdata:
+  postgres_data:

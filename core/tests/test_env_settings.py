@@ -20,7 +20,6 @@ class DebugSettingTest(TestCase):
 
     def test_debug_setting(self):
         """Check if config accepts environment variable DEBUG and sets it."""
-        
 
 
 if __name__ == '__main__':
