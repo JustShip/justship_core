@@ -27,8 +27,8 @@ DATABASES = {
     }
 }
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 EMAIL_HOST = get_env_variable('EMAIL_HOST')
 EMAIL_PORT = get_env_variable('EMAIL_PORT')
