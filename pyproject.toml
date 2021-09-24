@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "justshipto_core"
+version = "1.0.0"
+description = "JustShip it!"
+authors = ["Reinier Hernández <sasuke.reinier@gmail.com>"]
+license = "GPL-3.0"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "3.2.7"
+Pillow = "8.3.2"
+graphene-django = "2.15.0"
+psycopg2-binary = "2.8"
+
+[tool.poetry.dev-dependencies]
+Sphinx = "4.2.0"
+coverage = "5.5"
+pylint = "2.11.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
