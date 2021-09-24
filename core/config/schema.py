@@ -25,11 +25,11 @@ class Query(graphene.ObjectType):
     profile_by_first_name = graphene.Field(
         ProfileType, first_name=graphene.String(required=True))
 
-    def resolve_profiles(self, root, info):
+    def resolve_profiles(root, info):
         # We can easily optimize query count in the resolve method
         return Profile.objects.all()
 
-    def resolve_profile_by_first_name(self, root, info, first_name):
+    def resolve_profile_by_first_name(root, info, first_name):
         try:
             return Profile.objects.get(first_name=first_name)
         except Profile.DoesNotExist:
