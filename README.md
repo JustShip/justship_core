@@ -18,7 +18,8 @@ Si deseas conocer sobre que va este proyecto te recomiendo que leas [este artíc
 o visites nuestras [redes sociales](https://bio.link/justship).
 
 ## ¡Apoya este proyecto!
-Este proyecto es de la comunidad para la comunidad
+Este proyecto es de la comunidad para la comunidad. Si deseas contribuir monetariamente puedes hacerlo a través de [Ko-fi](https://ko-fi.com/justship),
+[QvaPay](https://qvapay.com/payme/justshipto) o con cripto (ver en nuestra [web](https://justship.to)).
 
 ## Estructura de carpetas:
 
