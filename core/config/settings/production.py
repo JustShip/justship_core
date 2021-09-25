@@ -11,7 +11,7 @@ SECRET_KEY = get_env_variable("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production.py!
 DEBUG = False
 
-ALLOWED_HOSTS = [".justship.to"]
+ALLOWED_HOSTS = get_env_variable("DJANGO_ALLOWED_HOSTS")
 
 # add middleware to debug in production only for superusers
 MIDDLEWARE.append('justshipto_core.core.middleware.UserBasedExceptionMiddleware')
