@@ -140,6 +140,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -214,16 +217,17 @@ LOGGING = {
     }
 }
 
-# # security config
-# # SECURE_HSTS_SECONDS = 3600  # 1 hours. 31536000 seconds = 1 year
-# # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# # SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_REFERRER_POLICY = 'origin'
-# SECURE_HSTS_PRELOAD = True  # Without this, your site cannot be submitted to the browser preload list.
+# security config
+# SECURE_HSTS_SECONDS = 3600  # 1 hours. 31536000 seconds = 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_REFERRER_POLICY = 'origin'
+# Without this, your site cannot be submitted to the browser preload list.
+SECURE_HSTS_PRELOAD = True
 
 
-# # cookies
-# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-# SESSION_COOKIE_AGE = 600  # 10 minutes only
+# cookies
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 600  # 10 minutes only
