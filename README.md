@@ -102,6 +102,9 @@ Para crear y correr la imagen de docker:
 Para detener la imagen de docker:
 
     docker-compose down  
+    
+Para hacer despliegue rapido: 
+    ./build.sh
 
 ## Contribuidores:
 
