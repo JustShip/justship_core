@@ -104,7 +104,8 @@ Para detener la imagen de docker:
 
     docker-compose down  
     
-Para hacer despliegue rapido: 
+Para hacer despliegue rápido:
+
     ./build.sh
 
 ## Contribuidores:
