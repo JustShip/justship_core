@@ -24,7 +24,8 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements/develop.txt
+        pip install -r core/requirements/develop.txt
     - name: Run Tests
       run: |
-        python manage.py test
+        coverage run core/manage.py test core
+        coverage report

@@ -13,6 +13,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# media files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -22,7 +26,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

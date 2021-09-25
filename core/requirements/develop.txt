@@ -1,4 +1,5 @@
 -r base.txt # includes the base.txt requirements file
 
-psycopg2-binary>=2.8,<2.9
-gunicorn~=20.1.0
+Sphinx==4.2.0
+coverage==5.5
+pylint==2.11.1

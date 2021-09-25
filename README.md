@@ -74,7 +74,34 @@ Abre tu navegador en http://localhost:8000 y verás el sitio ejecutándose
 
 
 ## Desplegar
-TODO (Dockerizar)
+Este proyecto está dockerizado por lo que solo se deben crear las variables de entorno y levantar el contenedor
+
+### Variables de entorno
+Crea un fichero `.env` en la raíz del proyecto y agrega estas variables de entorno:
+
+- `SECRET_KEY` Firma criptográfica que usa Django para encriptar contraseñas y otros elementos de seguridad
+- `DB_NAME` nombre de la base de datos
+- `DB_HOST` dirección del host de la base de datos
+- `DB_USER` nombre de usuario de la base de datos
+- `DB_PASSWORD` contraseña de la base de datos
+- `EMAIL_HOST` dirección del host email con el que se va a enviar correos electrónicos
+- `EMAIL_PORT` puerto del host email con el que se va a enviar correos electrónicos
+- `EMAIL_HOST_USER` dirección de correo del email con el que se va a enviar correos electrónicos
+- `EMAIL_HOST_PASSWORD` contraseña de correo del email con el que se va a enviar correos electrónicos
+- `EMAIL_USE_TLS` boolean que indica si se va a usar el correo sobre TLS o no
+
+### Ejecutar Docker
+Para crear la imagen de Docker:
+
+     docker-compose build --tag justshipto_core:1.0 .
+
+Para crear y correr la imagen de docker:
+
+    docker-compose up  # para ejecutarlo en segundo plano hay que agregar -d
+
+Para detener la imagen de docker:
+
+    docker-compose down  
 
 ## Contribuidores:
 
