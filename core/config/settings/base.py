@@ -39,6 +39,7 @@ LOCAL_APPS = [
     'justshipto_core.accounts.apps.AccountsConfig',
     'justshipto_core.products.apps.ProductsConfig',
     'justshipto_core.resources.apps.ResourcesConfig',
+    'justshipto_core.mails.apps.MailsConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
