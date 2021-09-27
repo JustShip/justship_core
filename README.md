@@ -1,4 +1,5 @@
 # The JustShip Core
+
 > El nombre lo dice todo 🚀
 
 ![Django CI](https://github.com/JustShip/justshipto_core/actions/workflows/django.yml/badge.svg)
@@ -53,9 +54,9 @@ Este proyecto es de la comunidad para la comunidad. Si deseas contribuir monetar
     └── manage.py                   
 
 
-
 ## Ejecutar
 Ejecutar el proyecto localmente
+
 ### Instalar dependencias
 Para instalar las dependencias solo debe ejecutar:
 
@@ -111,10 +112,13 @@ Para hacer despliegue rápido:
 ## Contribuidores:
 
 ## Licencia:
+
 [GPL-3.0](LICENSE)
 
 ## Guía de contribución
+
 Si desea contribuir con el proyecto por favor, lea nuestra [Guía de contribución](CONTRIBUTING.md)
 
 ## Código de conducta
+
 [Código de conducta](CODE_OF_CONDUCT.md)

@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  
   web:
     build: ./core
     command: python manage.py runserver 0.0.0.0:8000
@@ -12,6 +13,7 @@ services:
       - ./.env.dev
     depends_on:
       - db
+  
   db:
     image: postgres:13.0-alpine
     volumes:
