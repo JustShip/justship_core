@@ -1,2 +1,4 @@
 Django==3.2.7
 graphene-django==2.15.0
+celery==^5.1.2
+redis==^3.5.3

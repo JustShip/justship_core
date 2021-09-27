@@ -11,6 +11,8 @@ Django = "3.2.7"
 Pillow = "8.3.2"
 graphene-django = "2.15.0"
 psycopg2-binary = "^2.8.5"
+celery = "^5.1.2"
+redis = "^3.5.3"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "4.2.0"
