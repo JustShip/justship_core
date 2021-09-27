@@ -5,3 +5,4 @@ class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'justshipto_core.core'
     label = 'core'
+    verbose_name = 'The Core app'

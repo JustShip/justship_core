@@ -37,6 +37,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'justshipto_core.core.apps.CoreConfig',
     'justshipto_core.accounts.apps.AccountsConfig',
+    'justshipto_core.products.apps.ProductsConfig'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
