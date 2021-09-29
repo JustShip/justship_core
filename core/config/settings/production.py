@@ -97,7 +97,6 @@ CSRF_COOKIE_SECURE = True
 SECURE_REFERRER_POLICY = 'origin'
 SECURE_HSTS_PRELOAD = True  # Without this, your site cannot be submitted to the browser preload list.
 
-
 # cookies
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 600  # 10 minutes only
