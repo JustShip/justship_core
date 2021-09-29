@@ -27,5 +27,5 @@ jobs:
         pip install -r justship/requirements/develop.txt
     - name: Run Tests
       run: |
-        coverage run justship/manage.py test core
+        coverage run justship/manage.py test
         coverage report
