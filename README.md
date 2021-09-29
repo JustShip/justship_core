@@ -4,6 +4,7 @@
 
 ![Django CI](https://github.com/JustShip/justshipto_core/actions/workflows/django.yml/badge.svg)
 ![GitHub Repo stars](https://img.shields.io/github/stars/justship/justshipto_core)
+[![GitNFT](https://img.shields.io/badge/%F0%9F%94%AE-Open%20in%20GitNFT-darkviolet?style=flat)](https://gitnft.quine.sh/app/commits/list/repo/justshipto_core)
 
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/JustShip?logo=sponsors)
 ![GitHub](https://img.shields.io/github/license/justship/justshipto_core)
