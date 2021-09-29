@@ -119,7 +119,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
-AUTH_USER_MODEL = 'accounts.Profile'
+AUTH_USER_MODEL = 'accounts.User'
 # LOGOUT_REDIRECT_URL = 'core:home'
 
 # languages list
@@ -128,9 +128,9 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 
-ADMINS = [("Admin del sitio", "admin@justship.to"), ]
+ADMINS = [('Admin del sitio', 'admin@justship.to'), ]
 
 # graphene configuration
 GRAPHENE = {
-    "SCHEMA": "config.schema.schema"
+    'SCHEMA': 'justshipto_core.api.schema.schema'
 }

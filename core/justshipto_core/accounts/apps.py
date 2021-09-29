@@ -5,4 +5,4 @@ class AccountsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'core.justshipto_core.accounts'
     label = 'accounts'
-    verbose_name = 'User Account'
+    verbose_name = 'Accounts'

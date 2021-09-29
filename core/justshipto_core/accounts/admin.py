@@ -1,12 +1,9 @@
 from django.contrib import admin
 
-from .models import Profile
+from . import models
 
-
-class ProfileAdmin(admin.ModelAdmin):
+@admin.register(models.User)
+class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'get_full_name', 'is_superuser']
     list_filter = ['is_superuser']
     search_fields = ['username', 'first_name', 'last_name']
-
-
-admin.site.register(Profile, ProfileAdmin)
