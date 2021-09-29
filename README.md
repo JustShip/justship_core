@@ -66,6 +66,9 @@ Para instalar las dependencias solo debe ejecutar:
 Este proyecto en modo desarrollo usa SQlite por lo que solo tienes que ejecutar las migraciones:
 
     python manage.py migrate
+Ejecutar celery:
+
+    celery -A core.config worker -l INFO
 Después creas un usuario administrador:
 
     python manage.py createsuperuser

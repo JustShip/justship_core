@@ -35,17 +35,17 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'justshipto_core.core.apps.CoreConfig',
-    'justshipto_core.accounts.apps.AccountsConfig',
-    'justshipto_core.products.apps.ProductsConfig',
-    'justshipto_core.resources.apps.ResourcesConfig',
-    'justshipto_core.mails.apps.MailsConfig',
-    'justshipto_core.api.apps.ApiConfig',
+    'core.justshipto_core.core.apps.CoreConfig',
+    'core.justshipto_core.accounts.apps.AccountsConfig',
+    'core.justshipto_core.products.apps.ProductsConfig',
+    'core.justshipto_core.resources.apps.ResourcesConfig',
+    'core.justshipto_core.mails.apps.MailsConfig',
+    'core.justshipto_core.api.apps.ApiConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'core.config.urls'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -8,7 +8,7 @@ from graphene_django.views import GraphQLView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('core/', include('justshipto_core.core.urls')),
-    path('accounts/', include('justshipto_core.accounts.urls')),
+    path('core/', include('core.justshipto_core.core.urls')),
+    path('accounts/', include('core.justshipto_core.accounts.urls')),
     path('graphql/', GraphQLView.as_view(graphiql=True)),
 ]

@@ -1,7 +1,7 @@
 from celery import shared_task
-from .models import Profile
+from django.contrib.auth import get_user_model
 
 
 @shared_task
 def count_profiles():
-    return Profile.objects.all()
+    return get_user_model().objects.all()
