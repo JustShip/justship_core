@@ -1,10 +1,12 @@
 from celery import shared_task
 from django.template import Context, Template
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 from .models import EmailLog
 
-SUPPORT_EMAIL = 'JustShip <support@justship.to>'
+EMAIL = settings.EMAIL_HOST_USER
+
 
 def render(template, context):
     with open('core/justshipto_core/mails/templates/mails/' + template, 'r') as file:
