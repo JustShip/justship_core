@@ -35,17 +35,17 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'core.justship.core.apps.CoreConfig',
-    'core.justship.accounts.apps.AccountsConfig',
-    'core.justship.products.apps.ProductsConfig',
-    'core.justship.resources.apps.ResourcesConfig',
-    'core.justship.mails.apps.MailsConfig',
-    'core.justship.api.apps.ApiConfig',
+    'justship.apps.core.apps.CoreConfig',
+    'justship.apps.accounts.apps.AccountsConfig',
+    'justship.apps.products.apps.ProductsConfig',
+    'justship.apps.resources.apps.ResourcesConfig',
+    'justship.apps.mails.apps.MailsConfig',
+    'justship.apps.api.apps.ApiConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-ROOT_URLCONF = 'core.config.urls'
+ROOT_URLCONF = 'justship.config.urls'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -132,5 +132,5 @@ ADMINS = [('Admin del sitio', 'admin@justship.to'), ]
 
 # graphene configuration
 GRAPHENE = {
-    'SCHEMA': 'justship.api.schema.schema'
+    'SCHEMA': 'justship.apps.api.schema.schema'
 }

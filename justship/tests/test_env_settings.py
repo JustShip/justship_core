@@ -13,7 +13,6 @@ class DebugSettingTest(TestCase):
 
     _variants = {
         True: ('Yes', 'YES', 'Y', 'TRUE', 'tRUE', 'true', 'On'),
-
         False: ('No', 'nO', 'N', 'n', 'false', 'False', 'off', 'oFF'),
     }
     env_var_debug = 'DEBUG'
