@@ -132,5 +132,5 @@ ADMINS = [('Admin del sitio', 'admin@justship.to'), ]
 
 # graphene configuration
 GRAPHENE = {
-    'SCHEMA': 'config.schema.schema'
+    'SCHEMA': 'justshipto_core.api.schema.schema'
 }
