@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "justshipto_core"
+name = "justship_core"
 version = "1.0.0"
 description = "JustShip it!"
 authors = ["Reinier Hernández <sasuke.reinier@gmail.com>"]
