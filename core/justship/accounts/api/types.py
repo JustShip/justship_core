@@ -1,7 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from core.justshipto_core.accounts.models import User
+from core.justship.accounts.models import User
 
 class UserType(DjangoObjectType):
     class Meta:

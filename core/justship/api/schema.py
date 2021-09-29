@@ -2,9 +2,9 @@ import graphene
 from graphene import ObjectType
 from graphene_django import DjangoObjectType
 
-from justshipto_core.accounts.api.schema import UserMutations, UserQueries, user_types
-from justshipto_core.products.api.schema import ProductMutations, ProductQueries, product_types
-from justshipto_core.resources.api.schema import ResourceMutations, ResourceQueries, resource_types
+from justship.accounts.api.schema import UserMutations, UserQueries, user_types
+from justship.products.api.schema import ProductMutations, ProductQueries, product_types
+from justship.resources.api.schema import ResourceMutations, ResourceQueries, resource_types
 
 
 types = user_types + product_types + resource_types

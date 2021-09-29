@@ -1,5 +1,5 @@
 """
-ASGI config for justshipto_core project.
+ASGI config for justship project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

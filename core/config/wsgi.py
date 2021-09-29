@@ -1,5 +1,5 @@
 """
-WSGI config for justshipto_core project.
+WSGI config for justship project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

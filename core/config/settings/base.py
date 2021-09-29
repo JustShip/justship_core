@@ -35,12 +35,12 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'core.justshipto_core.core.apps.CoreConfig',
-    'core.justshipto_core.accounts.apps.AccountsConfig',
-    'core.justshipto_core.products.apps.ProductsConfig',
-    'core.justshipto_core.resources.apps.ResourcesConfig',
-    'core.justshipto_core.mails.apps.MailsConfig',
-    'core.justshipto_core.api.apps.ApiConfig',
+    'core.justship.core.apps.CoreConfig',
+    'core.justship.accounts.apps.AccountsConfig',
+    'core.justship.products.apps.ProductsConfig',
+    'core.justship.resources.apps.ResourcesConfig',
+    'core.justship.mails.apps.MailsConfig',
+    'core.justship.api.apps.ApiConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -132,5 +132,5 @@ ADMINS = [('Admin del sitio', 'admin@justship.to'), ]
 
 # graphene configuration
 GRAPHENE = {
-    'SCHEMA': 'justshipto_core.api.schema.schema'
+    'SCHEMA': 'justship.api.schema.schema'
 }

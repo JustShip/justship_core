@@ -1,6 +1,6 @@
 from django.db import models
 
-from justshipto_core.core.models import TimeStampedModel
+from core.justship.core.models import TimeStampedModel
 
 
 class EmailLog(TimeStampedModel):

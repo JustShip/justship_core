@@ -9,7 +9,7 @@ EMAIL = settings.EMAIL_HOST_USER
 
 
 def render(template, context):
-    with open('core/justshipto_core/mails/templates/mails/' + template, 'r') as file:
+    with open('core/justship/mails/templates/mails/' + template, 'r') as file:
         text = file.read()
         tmpl = Template(text)
     return tmpl.render(Context(context))

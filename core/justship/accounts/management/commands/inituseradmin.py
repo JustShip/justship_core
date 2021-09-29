@@ -1,6 +1,6 @@
 # from django.conf import settings
 from django.core.management.base import BaseCommand
-# from justshipto_core.accounts
+# from justship.accounts
 
 
 class Command(BaseCommand):

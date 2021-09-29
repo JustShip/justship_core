@@ -14,7 +14,7 @@ DEBUG = False
 ALLOWED_HOSTS = get_env_variable("DJANGO_ALLOWED_HOSTS")
 
 # add middleware to debug in production only for superusers
-MIDDLEWARE.append('justshipto_core.core.middleware.UserBasedExceptionMiddleware')
+MIDDLEWARE.append('justship.core.middleware.UserBasedExceptionMiddleware')
 
 DATABASES = {
     'default': {
@@ -79,7 +79,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
-        'justshipto_core': {
+        'justship': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'filters': [],
