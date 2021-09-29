@@ -6,3 +6,6 @@ class MailsConfig(AppConfig):
     name = 'core.justshipto_core.mails'
     label = 'mails'
     verbose_name = 'The Mails app'
+
+    def ready(self):
+        from . import receivers
