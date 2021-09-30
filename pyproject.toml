@@ -31,5 +31,5 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start = 'scripts:server'
 django = 'scripts:django'
-celery = 'scripts:celery'
+celerystart = 'scripts:celery'
 
