@@ -28,8 +28,8 @@ jobs:
       env:
         ENV: 'develop'
     - name: Print environment variables
-        run: |
-          echo $ENV
+      run: |
+        echo $ENV
     - name: Run Tests
       run: |
         coverage run justship/manage.py test
