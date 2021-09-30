@@ -31,5 +31,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start = 'scripts:server'
 django = 'scripts:django'
+superuser = 'scripts:create_super_user'
 celerystart = 'scripts:celery'
 
