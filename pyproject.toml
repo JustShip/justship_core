@@ -6,7 +6,7 @@ authors = ["Reinier Hernández <sasuke.reinier@gmail.com>"]
 license = "GPL-3.0"
 
 packages = [
-    { include="scripts.py", from="." },
+    { include = "scripts.py", from = "." },
 ]
 
 [tool.poetry.dependencies]
@@ -33,4 +33,4 @@ start = 'scripts:server'
 django = 'scripts:django'
 superuser = 'scripts:create_super_user'
 celerystart = 'scripts:celery'
-
+test = 'scripts:test'
