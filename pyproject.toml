@@ -24,6 +24,7 @@ django-graphql-jwt = "0.3.4"
 Sphinx = "4.2.0"
 coverage = "5.5"
 pylint = "2.11.1"
+mixer = "7.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
