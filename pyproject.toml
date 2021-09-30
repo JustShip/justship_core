@@ -1,9 +1,13 @@
 [tool.poetry]
-name = "justshipto_core"
+name = "justship_core"
 version = "1.0.0"
 description = "JustShip it!"
 authors = ["Reinier Hernández <sasuke.reinier@gmail.com>"]
 license = "GPL-3.0"
+
+packages = [
+    { include = "scripts.py", from = "." },
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -14,12 +18,21 @@ psycopg2-binary = "^2.8.5"
 celery = "^5.1.2"
 redis = "^3.5.3"
 python-dotenv = "^0.19.0"
+django-graphql-jwt = "0.3.4"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "4.2.0"
 coverage = "5.5"
 pylint = "2.11.1"
+mixer = "7.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = 'scripts:server'
+django = 'scripts:django'
+superuser = 'scripts:create_super_user'
+celerystart = 'scripts:celery'
+test = 'scripts:test'
