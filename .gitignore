@@ -133,4 +133,4 @@ dmypy.json
 .vscode
 
 # staticfiles 
-core/staticfiles/
+justship/staticfiles/

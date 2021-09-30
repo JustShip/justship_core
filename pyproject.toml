@@ -5,6 +5,10 @@ description = "JustShip it!"
 authors = ["Reinier Hernández <sasuke.reinier@gmail.com>"]
 license = "GPL-3.0"
 
+packages = [
+    { include="scripts.py", from="." },
+]
+
 [tool.poetry.dependencies]
 python = "^3.8"
 Django = "3.2.7"
@@ -23,3 +27,9 @@ pylint = "2.11.1"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = 'scripts:server'
+django = 'scripts:django'
+celery = 'scripts:celery'
+
