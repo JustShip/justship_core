@@ -18,14 +18,16 @@ class SignUp(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, username, email, password):
-        user = get_user_model()(
-            username=username,
-            email=email
-        )
-        user.set_password(password)
-        user.save()
+        if info.context.user.is_anonymous:
+            user = get_user_model()(
+                username=username,
+                email=email
+            )
+            user.set_password(password)
+            user.save()
 
-        return SignUp(user=user)
+            return SignUp(user=user)
+        return SignUp(user=None)
 
 
 class UserMutations(graphene.ObjectType):
