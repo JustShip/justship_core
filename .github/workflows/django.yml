@@ -27,6 +27,9 @@ jobs:
         pip install -r justship/requirements/develop.txt
       env:
         ENV: 'develop'
+    - name: Print environment variables
+        run: |
+          echo $ENV
     - name: Run Tests
       run: |
         coverage run justship/manage.py test
