@@ -1,6 +1,5 @@
 import graphene
 from graphene import ObjectType
-from graphene_django import DjangoObjectType
 
 from justship.apps.accounts.api.schema import UserMutations, UserQueries, user_types
 from justship.apps.products.api.schema import ProductMutations, ProductQueries, product_types
@@ -13,12 +12,12 @@ class Query(ObjectType, UserQueries, ProductQueries, ResourceQueries):
     pass
 
 
-class Mutation(ObjectType, UserMutations, ProductMutations, ResourceMutations):
+class Mutation(UserMutations, ProductMutations, ResourceMutations, ObjectType):
     pass
 
 
 schema = graphene.Schema(
     types=types,
     # query=Query,
-    # mutation=Mutation
+    mutation=Mutation
 )
