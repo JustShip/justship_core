@@ -132,5 +132,13 @@ ADMINS = [('Admin del sitio', 'admin@justship.to'), ]
 
 # graphene configuration
 GRAPHENE = {
-    'SCHEMA': 'justship.apps.api.schema.schema'
+    'SCHEMA': 'justship.apps.api.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
