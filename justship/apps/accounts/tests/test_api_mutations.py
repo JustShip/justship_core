@@ -1,20 +1,31 @@
-from django.test import TestCase
-from graphene.test import Client
+import json
+from graphene_django.utils.testing import GraphQLTestCase
+from django.contrib.auth import get_user_model
+from mixer.backend.django import mixer
 
-from justship.apps.api.schema import schema
 
+class ApiMutationTests(GraphQLTestCase):
+    def setUp(self) -> None:
+        self.user1 = mixer.blend(get_user_model())
 
-class ApiMutationTests(TestCase):
-    def test_update_message(self):
+    def test_update_username_with_anonymous_user(self) -> None:
         """
-        Test example
-        :return:
+        Anonymous user try to update the username
+        :return: None
         """
-        client = Client(schema=schema)
-        # executed = client.execute('''{ hey }''')
-        # assert executed == {
-        #     'data': {
-        #         'hey': 'hello!'
-        #     }
-        # }
-        self.assertTrue(True)
+        response = self.query(
+            '''
+            mutation updateUsername($username: String) {
+                updateUsername(username: $username) {
+                    ok
+                }
+            }
+            ''',
+            op_name='updateUsername',
+            variables={'username': 'ragnarok'}
+        )
+        content = json.loads(response.content)
+
+        # This validates the status code and if you get errors
+        self.assertResponseNoErrors(response)
+        self.assertEqual(content['data']['updateUsername']['ok'], False)
