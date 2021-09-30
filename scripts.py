@@ -14,7 +14,7 @@ def create_super_user():
 
 
 def celery():
-    cmd = "/bin/zsh celery.sh"
+    cmd = "/bin/sh celery.sh"
     __run_command(cmd)
 
 
