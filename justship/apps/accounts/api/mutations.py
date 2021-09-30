@@ -5,6 +5,9 @@ from justship.apps.accounts.models import User
 
 
 class UpdateUsername(graphene.Mutation):
+    """
+    Update current user's username
+    """
     class Arguments:
         username = graphene.String()
     ok = graphene.Boolean()
