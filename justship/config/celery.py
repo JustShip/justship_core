@@ -5,14 +5,7 @@ from celery import Celery
 load_dotenv()
 
 # Set the default Django settings module for the 'celery' program.
-if os.getenv('ENV') == 'develop':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'justship.config.settings.develop')
-
-elif os.getenv('ENV') == 'staging':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'justship.config.settings.staging')
-
-elif os.getenv('ENV') == 'production':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'justship.config.settings.production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'justship.config.settings.develop')
 
 # Get the base REDIS URL, default to redis' default
 BASE_REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')

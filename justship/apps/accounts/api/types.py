@@ -1,4 +1,3 @@
-import graphene
 from graphene_django import DjangoObjectType
 
 from justship.apps.accounts.models import User

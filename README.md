@@ -86,6 +86,8 @@ Este proyecto está dockerizado por lo que solo se deben crear las variables de 
 Crea un fichero `.env` en la raíz del proyecto y agrega estas variables de entorno:
 
 - `SECRET_KEY` Firma criptográfica que usa Django para encriptar contraseñas y otros elementos de seguridad
+- `DJANGO_ALLOWED_HOSTS` Dirección del host en la que se ejecuta
+- `DJANGO_SETTINGS_MODULE` Solo necesario en producción. Dirección del módulo de configuración (`config.settings.develop`)
 - `DB_NAME` nombre de la base de datos
 - `DB_HOST` dirección del host de la base de datos
 - `DB_USER` nombre de usuario de la base de datos
