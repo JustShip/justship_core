@@ -105,8 +105,31 @@ class PasswordResetConfirm(graphene.Mutation):
             return GraphQLError('uid incorrecto')
 
 
+class ChangePassword(graphene.Mutation):
+    class Arguments:
+        password = graphene.String()
+        new_password = graphene.String()
+
+    ok = graphene.Boolean()
+
+    @staticmethod
+    def mutate(root, info, password, new_password):
+        user = info.context.user
+        if not user.is_anonymous:
+            is_correct_password = user.check_password(password)
+            if is_correct_password:
+                user.set_password(new_password)
+                user.save()
+                # TODO: get a new token and return it
+                return ChangePassword(ok=True)
+            else:
+                return GraphQLError('contraseña incorrecta')
+        return ChangePassword(ok=False)
+
+
 class UserMutations(graphene.ObjectType):
     sign_up = SignUp.Field()
     update_username = UpdateUsername.Field()
     password_reset = PasswordReset.Field()
     password_reset_confirm = PasswordResetConfirm.Field()
+    change_password = ChangePassword.Field()
