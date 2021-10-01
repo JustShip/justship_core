@@ -1,7 +1,7 @@
 from celery import shared_task
-from django.template import Context, Template
-from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template import Context, Template
 
 from .models import EmailLog
 
@@ -15,6 +15,7 @@ def render(template, context):
     return tmpl.render(Context(context))
 
 
+@shared_task
 def send_mail(sender, to, subject, html):
     msg = EmailMultiAlternatives(
         subject=subject,
