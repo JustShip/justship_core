@@ -15,7 +15,7 @@ def render(template: str, context: dict) -> str:
     return tmpl.render(Context(context))
 
 
-def send_mail(sender: str, to: str, subject: str, html: str) -> None:
+def send_mail(sender: str, to: [list, tuple], subject: str, html: str) -> None:
     msg = EmailMultiAlternatives(
         subject=subject,
         from_email=sender,
@@ -41,11 +41,11 @@ def send_system_mail(to: str, subject: str, html: str) -> None:
     :param html: html render with email
     :return: None
     """
-    send_mail(EMAIL, to, subject, html)
+    send_mail(EMAIL, [to], subject, html)
 
 
 @shared_task
-def send_recovery_mail(to: str) -> None:
-    context = {'hash': 1234}
+def send_recovery_mail(to: str, token: str) -> None:
+    context = {'token': token}
     template = render('recovery_mail.html', context)
     send_system_mail(to, 'Recuperar contraseña', template)

@@ -1,7 +1,9 @@
 import graphene
 from django.contrib.auth import get_user_model
+from graphql import GraphQLError
 
 from .types import UserType
+from ...mails.tasks import send_recovery_mail
 
 
 class SignUp(graphene.Mutation):
@@ -56,13 +58,28 @@ class PasswordReset(graphene.Mutation):
     Send a recovery password email
     """
 
+    class Arguments:
+        email = graphene.String()
 
-class PasswordResetConfirm(graphene.Mutation):
-    """
-    Change user password
-    """
+    ok = graphene.Boolean()
+
+    @staticmethod
+    def mutate(root, info, email):
+        try:
+            user = get_user_model().objects.get(email=email)
+            send_recovery_mail.delay(user.email, '1234')
+        except get_user_model().DoesNotExist:
+            return GraphQLError('no existe un usuario con ese email')
+        return PasswordReset(ok=True)
+
+
+# class PasswordResetConfirm(graphene.Mutation):
+#     """
+#     Change user password
+#     """
 
 
 class UserMutations(graphene.ObjectType):
     sign_up = SignUp.Field()
     update_username = UpdateUsername.Field()
+    password_reset = PasswordReset.Field()
