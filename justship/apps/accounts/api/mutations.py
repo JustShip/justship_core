@@ -1,8 +1,8 @@
 import graphene
 from django.contrib.auth import get_user_model
 
-from justship.apps.accounts.api.types import UserType
-from justship.apps.accounts.models import User
+from .types import UserType
+
 
 class SignUp(graphene.Mutation):
     """

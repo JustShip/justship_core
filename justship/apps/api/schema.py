@@ -2,9 +2,9 @@ import graphene
 import graphql_jwt
 from graphene import ObjectType
 
-from justship.apps.accounts.api.schema import UserMutations, UserQueries, user_types
-from justship.apps.products.api.schema import ProductMutations, ProductQueries, product_types
-from justship.apps.resources.api.schema import ResourceMutations, ResourceQueries, resource_types
+from ..accounts.api.schema import UserMutations, UserQueries, user_types
+from ..products.api.schema import ProductMutations, ProductQueries, product_types
+from ..resources.api.schema import ResourceMutations, ResourceQueries, resource_types
 
 types = user_types + product_types + resource_types
 
