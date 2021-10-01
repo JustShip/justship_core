@@ -15,7 +15,6 @@ def render(template, context):
     return tmpl.render(Context(context))
 
 
-@shared_task
 def send_mail(sender, to, subject, html):
     msg = EmailMultiAlternatives(
         subject=subject,

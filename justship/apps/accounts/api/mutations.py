@@ -34,8 +34,10 @@ class UpdateUsername(graphene.Mutation):
     """
     Update current user's username
     """
+
     class Arguments:
         username = graphene.String()
+
     ok = graphene.Boolean()
     user = graphene.Field(UserType)
 
@@ -47,6 +49,18 @@ class UpdateUsername(graphene.Mutation):
             user.save()
             return UpdateUsername(ok=True, user=user)
         return UpdateUsername(ok=False, user=None)
+
+
+class PasswordReset(graphene.Mutation):
+    """
+    Send a recovery password email
+    """
+
+
+class PasswordResetConfirm(graphene.Mutation):
+    """
+    Change user password
+    """
 
 
 class UserMutations(graphene.ObjectType):
