@@ -77,13 +77,35 @@ class PasswordReset(graphene.Mutation):
         return PasswordReset(ok=True)
 
 
-# class PasswordResetConfirm(graphene.Mutation):
-#     """
-#     Change user password
-#     """
+class PasswordResetConfirm(graphene.Mutation):
+    """
+    Change user password
+    """
+
+    class Arguments:
+        uid = graphene.String()
+        token = graphene.String()
+        password = graphene.String()
+
+    user = graphene.Field(UserType)
+
+    @staticmethod
+    def mutate(root, info, uid, token, password):
+        pk = utils.decode_uid(uid)
+        try:
+            user = get_user_model().objects.get(pk=pk)
+            if utils.is_correct_token(user, token):
+                user.set_password(password)
+                user.save()
+                return PasswordResetConfirm(user=user)
+            else:
+                return GraphQLError('token incorrecto')
+        except get_user_model().DoesNotExist:
+            return GraphQLError('uid incorrecto')
 
 
 class UserMutations(graphene.ObjectType):
     sign_up = SignUp.Field()
     update_username = UpdateUsername.Field()
     password_reset = PasswordReset.Field()
+    password_reset_confirm = PasswordResetConfirm.Field()

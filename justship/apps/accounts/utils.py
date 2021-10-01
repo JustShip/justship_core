@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 
 def generate_uid(pk: int) -> str:
@@ -22,3 +22,11 @@ def generate_token(user: get_user_model()) -> str:
     :return: A hash token
     """
     return default_token_generator.make_token(user)
+
+
+def decode_uid(uid: str) -> str:
+    return urlsafe_base64_decode(uid)
+
+
+def is_correct_token(user: get_user_model(), token: str) -> bool:
+    return default_token_generator.check_token(user, token)
