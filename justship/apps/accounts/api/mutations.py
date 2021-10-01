@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from graphql import GraphQLError
 
 from .types import UserType
+from .. import utils
 from ...mails.tasks import send_recovery_mail
 
 
@@ -65,9 +66,12 @@ class PasswordReset(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, email):
+        domain = info.context.headers['Origin']
         try:
             user = get_user_model().objects.get(email=email)
-            send_recovery_mail.delay(user.email, '1234')
+            uid = utils.generate_uid(user.pk)
+            token = utils.generate_token(user)
+            send_recovery_mail.delay(user.email, domain, uid, token)
         except get_user_model().DoesNotExist:
             return GraphQLError('no existe un usuario con ese email')
         return PasswordReset(ok=True)

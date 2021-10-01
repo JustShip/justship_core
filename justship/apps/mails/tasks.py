@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template import Context, Template
 
+from . import constants
 from .models import EmailLog
 
 EMAIL = settings.EMAIL_HOST_USER
@@ -45,7 +46,12 @@ def send_system_mail(to: str, subject: str, html: str) -> None:
 
 
 @shared_task
-def send_recovery_mail(to: str, token: str) -> None:
-    context = {'token': token}
+def send_recovery_mail(to: str, domain: str, uid: str, token: str) -> None:
+    link = constants.PASSWORD_RESET_URL.format(
+        domain=domain,
+        uid=uid,
+        token=token
+    )
+    context = {'link': link}
     template = render('recovery_mail.html', context)
     send_system_mail(to, 'Recuperar contraseña', template)
