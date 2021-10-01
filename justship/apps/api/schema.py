@@ -26,6 +26,6 @@ class Mutation(UserMutations, ProductMutations, ResourceMutations, ObjectType):
 
 schema = graphene.Schema(
     types=types,
-    # query=Query,
+    query=Query,
     mutation=Mutation
 )
