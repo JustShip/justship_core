@@ -2,23 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def main():
     """Run administrative tasks."""
 
-    if os.getenv('ENV') == 'develop':
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.develop')
-    
-    elif os.getenv('ENV') == 'staging':
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.staging')
-    
-    elif os.getenv('ENV') == 'production':
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
-
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.develop')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -27,7 +16,7 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    
+
     execute_from_command_line(sys.argv)
 
 
