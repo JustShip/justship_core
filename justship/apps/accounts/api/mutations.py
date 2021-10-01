@@ -95,6 +95,7 @@ class PasswordResetConfirm(graphene.Mutation):
         try:
             user = get_user_model().objects.get(pk=pk)
             if utils.is_correct_token(user, token):
+                # TODO: check password strength
                 user.set_password(password)
                 user.save()
                 return PasswordResetConfirm(user=user)
