@@ -137,11 +137,20 @@ class FollowUser(graphene.Mutation):
     @staticmethod
     def mutate(root, info, user_id):
         user = info.context.user
+
+        # user must be logged
         if user.is_authenticated:
+            # user not follow him/her self
+            if user.pk == user_id:
+                return GraphQLError('No puedes seguirte a ti mismo')
+
             to_follow = get_user_model().objects.filter(pk=user_id).first()
+
+            # user to follow must exists
             if to_follow:
-                Follow(follower=user, followed=to_follow)
-                return FollowUser(status=True)
+                # check if already exists
+                follow, is_created = Follow.objects.get_or_create(follower=user, followed=to_follow)
+                return FollowUser(status=is_created)
             else:
                 return GraphQLError('Id del usuario no válido')
         else:
