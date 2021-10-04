@@ -36,3 +36,6 @@ class Follow(TimeStampedModel):
     def is_recent(self):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.created_at <= now
+
+    def __str__(self):
+        return '{} -> {}'.format(self.follower, self.followed)

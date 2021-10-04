@@ -1,5 +1,6 @@
 import graphene
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from graphql import GraphQLError
 
 from .types import UserType
@@ -159,12 +160,31 @@ class FollowUser(graphene.Mutation):
 
 class UnfollowUser(graphene.Mutation):
     class Arguments:
-        user = graphene.Int()
+        user_id = graphene.Int()
 
     status = graphene.Boolean()
 
-    def mutate(self, info, user):
-        return FollowUser(status=True)
+    @staticmethod
+    def mutate(root, info, user_id):
+        user = info.context.user
+
+        # user must be logged
+        if user.is_authenticated:
+            # you must not unfollow yourself
+            if user.pk == user_id:
+                return GraphQLError('No puedes dejar de seguirte a ti mismo')
+
+            to_unfollow = get_user_model().objects.filter(pk=user_id).first()
+            # check if user exists
+            if to_unfollow:
+                # check if you follow
+                unfollow = Follow.objects.filter(Q(followed_id=user_id) & Q(follower=user)).first()
+                unfollow.delete()
+                return UnfollowUser(status=True)
+            else:
+                return GraphQLError('Id del usuario no válido')
+        else:
+            return GraphQLError('Debes estar autenticado')
 
 
 class UserMutations(graphene.ObjectType):
