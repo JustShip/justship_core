@@ -18,5 +18,12 @@ class UserAdmin(UserAdmin):
     )
 
 
+@admin.register(models.Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ['follower', 'followed', 'created_at', 'is_recent']
+    list_filter = ['followed__first_name']
+    search_fields = ['created_at', 'follower', 'followed']
+
+
 # Remove Group from Django admin
 admin.site.unregister(Group)
