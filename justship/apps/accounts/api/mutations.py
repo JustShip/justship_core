@@ -4,6 +4,7 @@ from graphql import GraphQLError
 
 from .types import UserType
 from .. import utils
+from ..models import Follow
 from ...mails.tasks import send_recovery_mail
 
 
@@ -127,9 +128,41 @@ class ChangePassword(graphene.Mutation):
         return ChangePassword(ok=False)
 
 
+class FollowUser(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.Int()
+
+    status = graphene.Boolean()
+
+    @staticmethod
+    def mutate(root, info, user_id):
+        user = info.context.user
+        if user.is_authenticated:
+            to_follow = get_user_model().objects.filter(pk=user_id).first()
+            if to_follow:
+                Follow(follower=user, followed=to_follow)
+                return FollowUser(status=True)
+            else:
+                return GraphQLError('Id del usuario no válido')
+        else:
+            return GraphQLError('Debes estar autenticado')
+
+
+class UnfollowUser(graphene.Mutation):
+    class Arguments:
+        user = graphene.Int()
+
+    status = graphene.Boolean()
+
+    def mutate(self, info, user):
+        return FollowUser(status=True)
+
+
 class UserMutations(graphene.ObjectType):
     sign_up = SignUp.Field()
     update_username = UpdateUsername.Field()
     password_reset = PasswordReset.Field()
     password_reset_confirm = PasswordResetConfirm.Field()
     change_password = ChangePassword.Field()
+    follow = FollowUser.Field()
+    unfollow = UnfollowUser.Field()
