@@ -23,7 +23,6 @@ class Resource(TimeStampedModel):
         related_name='categories',
         verbose_name='Category',
         max_length=100,
-        null=True,
         blank=True
     )
     image = models.URLField(verbose_name='Image', null=True, blank=True)
