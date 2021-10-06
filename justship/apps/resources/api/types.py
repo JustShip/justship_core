@@ -1,6 +1,16 @@
 from graphene_django import DjangoObjectType
 
-from ..models import Resource
+from ..models import Resource, Category
+
+
+class CategoryType(DjangoObjectType):
+    class Meta:
+        model = Category
+        only_fields = (
+            'id',
+            'name',
+            'description',
+        )
 
 
 class ResourceType(DjangoObjectType):
@@ -17,5 +27,5 @@ class ResourceType(DjangoObjectType):
 
 
 resource_types = [
-    ResourceType
+    ResourceType, CategoryType
 ]
