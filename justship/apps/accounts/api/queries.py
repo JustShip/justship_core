@@ -14,7 +14,7 @@ class UserQueries:
 
     def resolve_profile(self, info, username):
         """
-        Given the username, returns the user. If this isn't exists throw error
+        Given the username (no matter upper or lowercase), returns the user. If this isn't exists throw error
         :param info: request and metadata info
         :param username: username to search
         :return: if user exists returns, else throw error
