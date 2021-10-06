@@ -61,6 +61,26 @@ class UpdateCategory(graphene.Mutation):
             return GraphQLError('You must be staff')
 
 
+class DeleteCategory(graphene.Mutation):
+    class Arguments:
+        category_id = graphene.Int()
+
+    status = graphene.Boolean()
+
+    @staticmethod
+    def mutate(root, info, category_id):
+        if info.context.user.is_staff:
+            category = models.Category.objects.filter(id=category_id).first()
+            if category:
+                category.delete()
+                return DeleteCategory(status=True)
+            else:
+                return DeleteCategory(status=False)
+        else:
+            return GraphQLError('You must be staff')
+
+
 class ResourceMutations:
     add_category = CreateCategory.Field()
     update_category = UpdateCategory.Field()
+    delete_category = DeleteCategory.Field()
