@@ -86,12 +86,12 @@ class DeleteCategory(graphene.Mutation):
 class CreateResource(graphene.Mutation):
     class Arguments:
         url = graphene.String()
-        category = graphene.List(graphene.Int, required=False)
+        categories = graphene.List(graphene.Int, required=False)
 
     resource = graphene.Field(types.ResourceType)
 
     @staticmethod
-    def mutate(root, info, url, category=None):
+    def mutate(root, info, url, categories=None):
         """
         Create a resource. Only for logged users
         :param root:
@@ -104,11 +104,44 @@ class CreateResource(graphene.Mutation):
         if user.is_authenticated:
             resource = models.Resource(url=url, creator=user)
             resource.save()
-            categories = models.Category.objects.filter(pk__in=category)
-            resource.category.add(*categories)
+            if categories:
+                categories_list = models.Category.objects.filter(pk__in=categories)
+                resource.category.add(*categories_list)
             return CreateResource(resource=resource)
         else:
-            return GraphQLError('You must be authenticated')
+            return GraphQLError('You must be logged')
+
+
+class UpdateResource(graphene.Mutation):
+    class Arguments:
+        resource_id = graphene.Int()
+        url = graphene.String(required=False)
+        categories = graphene.List(graphene.Int, required=False)
+
+    resource = graphene.Field(types.ResourceType)
+
+    @staticmethod
+    def mutate(root, info, resource_id, url=None, categories=None):
+        user = info.context.user
+        # only authenticated user can access
+        if user.is_authenticated:
+            resource = models.Resource.objects.filter(pk=resource_id).first()
+            # only staff members or creator can edit this resource
+            if resource:
+                if user.is_staff or resource.creator == user:
+                    resource.url = url or resource.url
+                    if categories:
+                        categories_list = models.Category.objects.filter(pk__in=categories)
+                        resource.category.set(categories_list)
+                    resource.save()
+                    return UpdateResource(resource=resource)
+                else:
+                    return GraphQLError('You dont have permissions to edit this resource')
+
+            else:
+                return GraphQLError('Resource doesn\'t exists')
+        else:
+            return GraphQLError('You must be logged')
 
 
 class ResourceMutations:
@@ -116,3 +149,4 @@ class ResourceMutations:
     update_category = UpdateCategory.Field()
     delete_category = DeleteCategory.Field()
     add_resource = CreateResource.Field()
+    update_resource = UpdateResource.Field()
