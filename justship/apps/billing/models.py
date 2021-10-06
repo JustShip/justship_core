@@ -1,5 +1,6 @@
 import hashlib
 from django.db import models
+from django.conf import settings
 from django.utils.timezone import now
 
 from justship.apps.core.models import SingletonModel, TimeStampedModel
@@ -16,7 +17,10 @@ class BillingConfig(SingletonModel):
 
 
 class Transaction(TimeStampedModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
     number = models.CharField(max_length=255)
     state = models.CharField(max_length=255, default='pending', choices=(
         ('pending', 'Pending'),
