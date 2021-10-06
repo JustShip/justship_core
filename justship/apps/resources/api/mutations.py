@@ -97,7 +97,7 @@ class CreateResource(graphene.Mutation):
         :param root:
         :param info:
         :param url: resource's url
-        :param category: resource's categories
+        :param categories: resource's categories
         :return: a new resource
         """
         user = info.context.user
