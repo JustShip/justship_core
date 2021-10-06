@@ -11,6 +11,7 @@ class CreateCategory(graphene.Mutation):
         description = graphene.String(required=False)
 
     status = graphene.Boolean()
+    category = graphene.Field(types.CategoryType)
 
     @staticmethod
     def mutate(root, info, name, description=None):
@@ -25,7 +26,7 @@ class CreateCategory(graphene.Mutation):
         if info.context.user.is_staff:
             # create only if doesn't exists
             category, is_created = models.Category.objects.get_or_create(name=name, description=description)
-            return CreateCategory(status=is_created)
+            return CreateCategory(status=is_created, category=category)
         else:
             return GraphQLError('You must be staff')
 
@@ -45,6 +46,8 @@ class UpdateCategory(graphene.Mutation):
         :param root:
         :param info:
         :param category_id: category's id
+        :param name: new category's name
+        :param description: new category's description
         :return: the updated category
         """
         user = info.context.user
@@ -80,7 +83,36 @@ class DeleteCategory(graphene.Mutation):
             return GraphQLError('You must be staff')
 
 
+class CreateResource(graphene.Mutation):
+    class Arguments:
+        url = graphene.String()
+        category = graphene.List(graphene.Int, required=False)
+
+    resource = graphene.Field(types.ResourceType)
+
+    @staticmethod
+    def mutate(root, info, url, category=None):
+        """
+        Create a resource. Only for logged users
+        :param root:
+        :param info:
+        :param url: resource's url
+        :param category: resource's categories
+        :return: a new resource
+        """
+        user = info.context.user
+        if user.is_authenticated:
+            resource = models.Resource(url=url, creator=user)
+            resource.save()
+            categories = models.Category.objects.filter(pk__in=category)
+            resource.category.add(*categories)
+            return CreateResource(resource=resource)
+        else:
+            return GraphQLError('You must be authenticated')
+
+
 class ResourceMutations:
     add_category = CreateCategory.Field()
     update_category = UpdateCategory.Field()
     delete_category = DeleteCategory.Field()
+    add_resource = CreateResource.Field()
