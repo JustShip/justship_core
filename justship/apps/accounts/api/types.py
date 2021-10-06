@@ -14,7 +14,8 @@ class UserType(DjangoObjectType):
             'username',
             'is_active',
             'date_joined',
-            'last_login'
+            'last_login',
+            'follows',
         )
 
 

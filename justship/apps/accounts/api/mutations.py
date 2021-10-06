@@ -1,9 +1,11 @@
 import graphene
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from graphql import GraphQLError
 
 from .types import UserType
 from .. import utils
+from ..models import Follow
 from ...mails.tasks import send_recovery_mail
 
 
@@ -127,9 +129,69 @@ class ChangePassword(graphene.Mutation):
         return ChangePassword(ok=False)
 
 
+class FollowUser(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.Int()
+
+    status = graphene.Boolean()
+
+    @staticmethod
+    def mutate(root, info, user_id):
+        user = info.context.user
+
+        # user must be logged
+        if user.is_authenticated:
+            # user not follow him/her self
+            if user.pk == user_id:
+                return GraphQLError('No puedes seguirte a ti mismo')
+
+            to_follow = get_user_model().objects.filter(pk=user_id).first()
+
+            # user to follow must exists
+            if to_follow:
+                # check if already exists
+                follow, is_created = Follow.objects.get_or_create(follower=user, followed=to_follow)
+                return FollowUser(status=is_created)
+            else:
+                return GraphQLError('Id del usuario no válido')
+        else:
+            return GraphQLError('Debes estar autenticado')
+
+
+class UnfollowUser(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.Int()
+
+    status = graphene.Boolean()
+
+    @staticmethod
+    def mutate(root, info, user_id):
+        user = info.context.user
+
+        # user must be logged
+        if user.is_authenticated:
+            # you must not unfollow yourself
+            if user.pk == user_id:
+                return GraphQLError('No puedes dejar de seguirte a ti mismo')
+
+            to_unfollow = get_user_model().objects.filter(pk=user_id).first()
+            # check if user exists
+            if to_unfollow:
+                # check if you follow
+                unfollow = Follow.objects.filter(Q(followed_id=user_id) & Q(follower=user)).first()
+                unfollow.delete()
+                return UnfollowUser(status=True)
+            else:
+                return GraphQLError('Id del usuario no válido')
+        else:
+            return GraphQLError('Debes estar autenticado')
+
+
 class UserMutations(graphene.ObjectType):
     sign_up = SignUp.Field()
     update_username = UpdateUsername.Field()
     password_reset = PasswordReset.Field()
     password_reset_confirm = PasswordResetConfirm.Field()
     change_password = ChangePassword.Field()
+    follow = FollowUser.Field()
+    unfollow = UnfollowUser.Field()
