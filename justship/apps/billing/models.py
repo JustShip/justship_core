@@ -12,7 +12,7 @@ class BillingConfig(SingletonModel):
     price_yearly = models.FloatField()
     currency = models.CharField(max_length=3, default='USD')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'Billing config'
 
 
@@ -41,8 +41,8 @@ class Transaction(TimeStampedModel):
     qvapay_id = models.CharField(max_length=255, null=True, blank=True)
     qvapay_url = models.URLField(null=True, blank=True)
 
-    def __str__(self):
-        return self.number
+    def __str__(self) -> str:
+        return str(self.number)
 
     def _do_insert(self, manager, using, fields, update_pk, raw):
         self.number = hashlib.sha256(
