@@ -28,3 +28,18 @@ class SingletonModel(models.Model):
     def load(cls):
         obj, created = cls.objects.get_or_create(pk=1)
         return obj
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self) -> str:
+        return str(self.name)
+
+
+class Social(models.Model):
+    name = models.CharField(max_length=100)
+    url = models.URLField()
+
+    def __str__(self) -> str:
+        return f'{self.name}: {self.url}'
