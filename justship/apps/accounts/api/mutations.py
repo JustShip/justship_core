@@ -1,5 +1,6 @@
 import graphene
 import graphql_jwt
+from graphql_jwt.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from graphql import GraphQLError
@@ -47,13 +48,12 @@ class UpdateUsername(graphene.Mutation):
     user = graphene.Field(UserType)
 
     @staticmethod
+    @login_required
     def mutate(root, info, username):
         user = info.context.user
-        if not user.is_anonymous:
-            user.username = username if username is not None else user.username
-            user.save()
-            return UpdateUsername(ok=True, user=user)
-        return UpdateUsername(ok=False, user=None)
+        user.username = username if username is not None else user.username
+        user.save()
+        return UpdateUsername(ok=True, user=user)
 
 
 class PasswordReset(graphene.Mutation):
@@ -72,6 +72,7 @@ class PasswordReset(graphene.Mutation):
         domain = info.context.headers['Origin']
         try:
             user = get_user_model().objects.get(email=email)
+            # TODO: improve code generation
             uid = utils.generate_uid(user.pk)
             token = utils.generate_token(user)
             send_recovery_mail.delay(user.email, domain, uid, token)
@@ -109,11 +110,10 @@ class PasswordResetConfirm(graphene.Mutation):
 
 
 class ChangePassword(graphene.Mutation):
+    ok = graphene.Boolean()
     class Arguments:
         password = graphene.String()
-        new_password = graphene.String()
-
-    ok = graphene.Boolean()
+        new_password = graphene.String()    
 
     @staticmethod
     def mutate(root, info, password, new_password):
@@ -130,32 +130,29 @@ class ChangePassword(graphene.Mutation):
 
 
 class FollowUser(graphene.Mutation):
+    status = graphene.Boolean()
+
     class Arguments:
         user_id = graphene.Int()
 
-    status = graphene.Boolean()
-
     @staticmethod
+    @login_required
     def mutate(root, info, user_id):
         user = info.context.user
 
-        # user must be logged
-        if user.is_authenticated:
-            # user not follow him/her self
-            if user.pk == user_id:
-                return GraphQLError('You can not follow yourself')
+        # user not follow him/her self
+        if user.pk == user_id:
+            return GraphQLError('You can not follow yourself')
 
-            to_follow = get_user_model().objects.filter(pk=user_id).first()
+        to_follow = get_user_model().objects.filter(pk=user_id).first()
 
-            # user to follow must exists
-            if to_follow:
-                # check if already exists
-                follow, is_created = Follow.objects.get_or_create(follower=user, followed=to_follow)
-                return FollowUser(status=is_created)
-            else:
-                return GraphQLError('Wrong user id')
+        # user to follow must exists
+        if to_follow:
+            # check if already exists
+            follow, is_created = Follow.objects.get_or_create(follower=user, followed=to_follow)
+            return FollowUser(status=is_created)
         else:
-            return GraphQLError('You need to be logged in')
+            return GraphQLError('Wrong user id')
 
 
 class UnfollowUser(graphene.Mutation):
@@ -165,26 +162,24 @@ class UnfollowUser(graphene.Mutation):
     status = graphene.Boolean()
 
     @staticmethod
+    @login_required
     def mutate(root, info, user_id):
         user = info.context.user
 
-        # user must be logged
-        if user.is_authenticated:
-            # you must not unfollow yourself
-            if user.pk == user_id:
-                return GraphQLError('You can not unfollow yourself')
+        # you must not unfollow yourself
+        if user.pk == user_id:
+            return GraphQLError('You can not unfollow yourself')
 
-            to_unfollow = get_user_model().objects.filter(pk=user_id).first()
-            # check if user exists
-            if to_unfollow:
-                # check if you follow
-                unfollow = Follow.objects.filter(Q(followed_id=user_id) & Q(follower=user)).first()
-                unfollow.delete()
-                return UnfollowUser(status=True)
-            else:
-                return GraphQLError('Wrong user id')
+        to_unfollow = get_user_model().objects.filter(pk=user_id).first()
+        
+        # check if user exists
+        if to_unfollow:
+            # check if you follow
+            unfollow = Follow.objects.filter(Q(followed_id=user_id) & Q(follower=user)).first()
+            unfollow.delete()
+            return UnfollowUser(status=True)
         else:
-            return GraphQLError('You need to be logged in')
+            return GraphQLError('Wrong user id')
 
 
 class UserMutations(graphene.ObjectType):
