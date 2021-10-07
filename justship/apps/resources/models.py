@@ -18,6 +18,7 @@ class Category(models.Model):
 
 class Resource(TimeStampedModel):
     url = models.URLField()
+    title = models.CharField(verbose_name='Title', max_length=100)
     category = models.ManyToManyField(
         Category,
         related_name='categories',
