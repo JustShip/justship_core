@@ -10,7 +10,7 @@ from graphql import GraphQLError
 from .types import UserType
 from .. import utils
 from ..models import Follow
-from justship.apps.mails.tasks import send_recovery_mail
+from justship.apps.mails.tasks import send_password_recovery_mail
 
 
 class TokenAuth(graphene.Mutation):
@@ -110,14 +110,11 @@ class PasswordReset(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, email):
-        # TODO: domain ?
-        domain = info.context.headers['Origin']
         try:
             user = get_user_model().objects.get(email=email)
-            # TODO: improve code generation
-            uid = utils.generate_uid(user.pk)
-            token = utils.generate_token(user)
-            send_recovery_mail.delay(user.email, domain, uid, token)
+            temporal_code = user.generate_temporal_code()
+            user.save()
+            send_password_recovery_mail.delay(user.email, temporal_code)
         except get_user_model().DoesNotExist:
             return GraphQLError('Used does not exists')
         return PasswordReset(ok=True)
@@ -130,24 +127,21 @@ class PasswordResetConfirm(graphene.Mutation):
     user = graphene.Field(UserType)
 
     class Arguments:
-        uid = graphene.String()
-        token = graphene.String()
+        email = graphene.String()
+        temporal_code = graphene.String()
         password = graphene.String()
 
     @staticmethod
-    def mutate(root, info, uid, token, password):
-        pk = utils.decode_uid(uid)
+    def mutate(root, info, email, temporal_code, password):
+        User = get_user_model()
         try:
-            user = get_user_model().objects.get(pk=pk)
-            if utils.is_correct_token(user, token):
-                # TODO: check password strength
-                user.set_password(password)
-                user.save()
-                return PasswordResetConfirm(user=user)
-            else:
-                return GraphQLError('Wrong token')
-        except get_user_model().DoesNotExist:
-            return GraphQLError('Wrong uid')
+            user = User.objects.get(email=email, temporal_code=temporal_code)
+            # TODO: check password strength
+            user.set_password(password)
+            user.save()
+            return PasswordResetConfirm(user=user)
+        except User.DoesNotExist:
+            return GraphQLError('Wrong code')
 
 
 class ChangePassword(graphene.Mutation):

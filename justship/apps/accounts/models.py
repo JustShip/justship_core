@@ -1,3 +1,5 @@
+import string
+import random
 import datetime
 
 from django.contrib import admin
@@ -45,6 +47,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.get_full_name() or self.username
+    
+    def generate_temporal_code(self):
+        size = 10
+        chars=string.ascii_uppercase + string.digits
+        self.temporal_code = ''.join(random.choice(chars) for _ in range(size))
+        return self.temporal_code
 
 
 class Follow(TimeStampedModel):
