@@ -10,11 +10,34 @@ from ..core.models import TimeStampedModel
 
 
 class User(AbstractUser):
+
     creator_type = models.CharField(
-        verbose_name='Tipo de Creador',
+        verbose_name='Creator type',
         max_length=10,
         choices=constants.CREATOR_TYPE_CHOICES
     )
+
+    # onboarding
+    onboarding_completed = models.BooleanField(default=False)
+
+    # signup and confirmations
+    temporal_code = models.CharField(max_length=10, null=True, blank=True)
+
+    # badges
+    verified = models.BooleanField(default=False)    
+    patreon = models.BooleanField(default=False)
+    team = models.BooleanField(default=False)
+
+    # avatar
+    avatar_file_id = models.CharField(max_length=255, null=True, blank=True)
+    avatar_url = models.URLField(null=True, blank=True)
+    avatar_thumbnail_url = models.URLField(null=True, blank=True)
+
+    # cover
+    cover_file_id = models.CharField(max_length=255, null=True, blank=True)
+    cover_url = models.URLField(null=True, blank=True)
+    cover_thumbnail_url = models.URLField(null=True, blank=True)
+
     follows = models.ManyToManyField('self', through='Follow')
 
     class Meta:

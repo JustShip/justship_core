@@ -12,10 +12,19 @@ class UserType(DjangoObjectType):
             'last_name',
             'email',
             'username',
+            'onboarding_completed',
+            'verified',
+            'patreon',
+            'team',
+            'avatar_url',
+            'avatar_thumbnail_url',
+            'cover_url',
+            'cover_thumbnail_url',
+            'follows',
             'is_active',
             'date_joined',
             'last_login',
-            'follows',
+            
         )
 
 
