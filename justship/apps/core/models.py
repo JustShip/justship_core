@@ -33,13 +33,13 @@ class SingletonModel(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return str(self.name)
 
 
 class Social(models.Model):
     name = models.CharField(max_length=100)
     url = models.URLField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name}: {self.url}'

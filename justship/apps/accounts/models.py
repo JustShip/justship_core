@@ -7,8 +7,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
-from . import constants
-from ..core.models import TimeStampedModel
+from justship.apps.accounts import constants
+from justship.apps.core.models import TimeStampedModel
 
 
 class User(AbstractUser):
@@ -45,7 +45,7 @@ class User(AbstractUser):
     class Meta:
         ordering = ['username']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.get_full_name() or self.username
     
     def generate_temporal_code(self):
@@ -68,5 +68,5 @@ class Follow(TimeStampedModel):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.created_at <= now
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '{} -> {}'.format(self.follower, self.followed)
