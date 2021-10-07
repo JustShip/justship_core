@@ -11,7 +11,7 @@ class ResourceQueries:
     resources = graphene.List(ResourceType)
 
     def resolve_resources(self, info):
-        pass
+        return models.Resource.objects.all()
 
     def resolve_category(self, info, category_id):
         return models.Category.objects.get(pk=category_id)

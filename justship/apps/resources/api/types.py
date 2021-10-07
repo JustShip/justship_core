@@ -18,6 +18,7 @@ class ResourceType(DjangoObjectType):
         model = Resource
         only_fields = (
             'id',
+            'title',
             'url',
             'category',
             'image',
