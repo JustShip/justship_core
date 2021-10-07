@@ -31,7 +31,6 @@ class SignUp(graphene.Mutation):
             )
             user.set_password(password)
             user.save()
-
             return SignUp(user=user)
         return SignUp(user=None)
 
@@ -69,6 +68,7 @@ class PasswordReset(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, email):
+        # TODO: domain ?
         domain = info.context.headers['Origin']
         try:
             user = get_user_model().objects.get(email=email)
@@ -76,7 +76,7 @@ class PasswordReset(graphene.Mutation):
             token = utils.generate_token(user)
             send_recovery_mail.delay(user.email, domain, uid, token)
         except get_user_model().DoesNotExist:
-            return GraphQLError('no existe un usuario con ese email')
+            return GraphQLError('Used does not exists')
         return PasswordReset(ok=True)
 
 
@@ -103,9 +103,9 @@ class PasswordResetConfirm(graphene.Mutation):
                 user.save()
                 return PasswordResetConfirm(user=user)
             else:
-                return GraphQLError('token incorrecto')
+                return GraphQLError('Wrong token')
         except get_user_model().DoesNotExist:
-            return GraphQLError('uid incorrecto')
+            return GraphQLError('Wrong uid')
 
 
 class ChangePassword(graphene.Mutation):
@@ -119,14 +119,13 @@ class ChangePassword(graphene.Mutation):
     def mutate(root, info, password, new_password):
         user = info.context.user
         if not user.is_anonymous:
-            is_correct_password = user.check_password(password)
-            if is_correct_password:
+            if user.check_password(password):
                 user.set_password(new_password)
                 user.save()
                 # TODO: get a new token and return it
                 return ChangePassword(ok=True)
             else:
-                return GraphQLError('contraseña incorrecta')
+                return GraphQLError('Wrong password')
         return ChangePassword(ok=False)
 
 
@@ -144,7 +143,7 @@ class FollowUser(graphene.Mutation):
         if user.is_authenticated:
             # user not follow him/her self
             if user.pk == user_id:
-                return GraphQLError('No puedes seguirte a ti mismo')
+                return GraphQLError('You can not follow yourself')
 
             to_follow = get_user_model().objects.filter(pk=user_id).first()
 
@@ -154,9 +153,9 @@ class FollowUser(graphene.Mutation):
                 follow, is_created = Follow.objects.get_or_create(follower=user, followed=to_follow)
                 return FollowUser(status=is_created)
             else:
-                return GraphQLError('Id del usuario no válido')
+                return GraphQLError('Wrong user id')
         else:
-            return GraphQLError('Debes estar autenticado')
+            return GraphQLError('You need to be logged in')
 
 
 class UnfollowUser(graphene.Mutation):
@@ -173,7 +172,7 @@ class UnfollowUser(graphene.Mutation):
         if user.is_authenticated:
             # you must not unfollow yourself
             if user.pk == user_id:
-                return GraphQLError('No puedes dejar de seguirte a ti mismo')
+                return GraphQLError('You can not unfollow yourself')
 
             to_unfollow = get_user_model().objects.filter(pk=user_id).first()
             # check if user exists
@@ -183,9 +182,9 @@ class UnfollowUser(graphene.Mutation):
                 unfollow.delete()
                 return UnfollowUser(status=True)
             else:
-                return GraphQLError('Id del usuario no válido')
+                return GraphQLError('Wrong user id')
         else:
-            return GraphQLError('Debes estar autenticado')
+            return GraphQLError('You need to be logged in')
 
 
 class UserMutations(graphene.ObjectType):
