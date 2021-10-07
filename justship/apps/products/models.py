@@ -14,7 +14,7 @@ class Product(models.Model):
     ))
 
     tags = models.ManyToManyField(Tag)
-    social = models.ManyToManyField(Social)
+    socials = models.ManyToManyField(Social)
 
     # logo
     logo_file_id = models.CharField(max_length=255, null=True, blank=True)
