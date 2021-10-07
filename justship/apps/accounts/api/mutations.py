@@ -1,6 +1,8 @@
 import graphene
 import graphql_jwt
 from graphql_jwt.decorators import login_required
+from graphql_jwt.utils import jwt_payload, jwt_encode
+from graphql_jwt.signals import token_issued
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from graphql import GraphQLError
@@ -8,20 +10,62 @@ from graphql import GraphQLError
 from .types import UserType
 from .. import utils
 from ..models import Follow
-from ...mails.tasks import send_recovery_mail
+from justship.apps.mails.tasks import send_recovery_mail
+
+
+class TokenAuth(graphene.Mutation):
+    """
+    Login user
+    """
+    ok = graphene.Boolean()
+    token = graphene.String()
+    user = graphene.Field(UserType)
+
+    class Arguments:
+        username = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+    def mutate(self, info, username, password):
+
+        User = get_user_model()
+
+        try:
+
+            if str(username).__contains__('@'):
+                user = User.objects.get(email__iexact=username)
+            else:
+                user = User.objects.get(username__iexact=username)
+            
+            if user.check_password(password=password) and user.is_active:
+
+                # Response without first_login
+                payload = jwt_payload(user)
+                token = jwt_encode(payload)
+
+                token_issued.send(
+                    sender='TokenAuth',
+                    request=info.context,
+                    user=user
+                )
+
+                return TokenAuth(ok=True, token=token, user=user)
+
+        except User.DoesNotExist:
+            pass
+
+        return TokenAuth(ok=False, user=None)
 
 
 class SignUp(graphene.Mutation):
     """
     Register user
     """
+    user = graphene.Field(UserType)
 
     class Arguments:
         username = graphene.String()
         email = graphene.String()
         password = graphene.String()
-
-    user = graphene.Field(UserType)
 
     @staticmethod
     def mutate(root, info, username, email, password):
@@ -40,12 +84,11 @@ class UpdateUsername(graphene.Mutation):
     """
     Update current user's username
     """
-
-    class Arguments:
-        username = graphene.String()
-
     ok = graphene.Boolean()
     user = graphene.Field(UserType)
+
+    class Arguments:
+        username = graphene.String()    
 
     @staticmethod
     @login_required
@@ -60,11 +103,10 @@ class PasswordReset(graphene.Mutation):
     """
     Send a recovery password email
     """
+    ok = graphene.Boolean()
 
     class Arguments:
         email = graphene.String()
-
-    ok = graphene.Boolean()
 
     @staticmethod
     def mutate(root, info, email):
@@ -83,15 +125,14 @@ class PasswordReset(graphene.Mutation):
 
 class PasswordResetConfirm(graphene.Mutation):
     """
-    Change user password
+    Request password reset
     """
+    user = graphene.Field(UserType)
 
     class Arguments:
         uid = graphene.String()
         token = graphene.String()
         password = graphene.String()
-
-    user = graphene.Field(UserType)
 
     @staticmethod
     def mutate(root, info, uid, token, password):
@@ -110,7 +151,11 @@ class PasswordResetConfirm(graphene.Mutation):
 
 
 class ChangePassword(graphene.Mutation):
+    """
+    Change password
+    """
     ok = graphene.Boolean()
+
     class Arguments:
         password = graphene.String()
         new_password = graphene.String()    
@@ -130,7 +175,7 @@ class ChangePassword(graphene.Mutation):
 
 
 class FollowUser(graphene.Mutation):
-    status = graphene.Boolean()
+    ok = graphene.Boolean()
 
     class Arguments:
         user_id = graphene.Int()
@@ -149,17 +194,17 @@ class FollowUser(graphene.Mutation):
         # user to follow must exists
         if to_follow:
             # check if already exists
-            follow, is_created = Follow.objects.get_or_create(follower=user, followed=to_follow)
-            return FollowUser(status=is_created)
+            follow, created = Follow.objects.get_or_create(follower=user, followed=to_follow)
+            return FollowUser(ok=created)
         else:
             return GraphQLError('Wrong user id')
 
 
 class UnfollowUser(graphene.Mutation):
+    ok = graphene.Boolean()
+
     class Arguments:
         user_id = graphene.Int()
-
-    status = graphene.Boolean()
 
     @staticmethod
     @login_required
@@ -177,14 +222,14 @@ class UnfollowUser(graphene.Mutation):
             # check if you follow
             unfollow = Follow.objects.filter(Q(followed_id=user_id) & Q(follower=user)).first()
             unfollow.delete()
-            return UnfollowUser(status=True)
+            return UnfollowUser(ok=True)
         else:
             return GraphQLError('Wrong user id')
 
 
 class UserMutations(graphene.ObjectType):
-    # authenticate the User with its username and password to obtain the JSON Web token.
-    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    # authenticate the User with its username or email and password to obtain the JSON Web token.
+    token_auth = TokenAuth.Field()
 
     # confirm that the token is valid, passing it as an argument.
     verify_token = graphql_jwt.Verify.Field()
