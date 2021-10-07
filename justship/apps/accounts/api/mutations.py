@@ -1,4 +1,5 @@
 import graphene
+import graphql_jwt
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from graphql import GraphQLError
@@ -188,6 +189,15 @@ class UnfollowUser(graphene.Mutation):
 
 
 class UserMutations(graphene.ObjectType):
+    # authenticate the User with its username and password to obtain the JSON Web token.
+    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+
+    # confirm that the token is valid, passing it as an argument.
+    verify_token = graphql_jwt.Verify.Field()
+
+    # obtain a new token within the renewed expiration time for non-expired tokens, if they are enabled to expire.
+    refresh_token = graphql_jwt.Refresh.Field()
+
     sign_up = SignUp.Field()
     update_username = UpdateUsername.Field()
     password_reset = PasswordReset.Field()
