@@ -12,6 +12,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(models.Resource)
 class ResourceAdmin(admin.ModelAdmin):
-    fields = ['url', 'category', 'image', 'description', 'creator']
-    list_display = ['url', 'description', 'creator']
-    search_fields = ['url', 'description']
+    fields = ['url', 'title', 'category', 'image', 'description', 'creator']
+    list_display = ['title', 'url', 'description', 'creator']
+    search_fields = ['title', 'url', 'description']
