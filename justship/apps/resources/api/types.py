@@ -24,6 +24,7 @@ class ResourceType(DjangoObjectType):
             'image',
             'description',
             'creator',
+            'vote_amount'
         )
 
 
