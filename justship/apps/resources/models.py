@@ -29,6 +29,10 @@ class Resource(TimeStampedModel):
         max_length=100,
         blank=True
     )
+    vote_amount = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.url
 
     class Meta:
         verbose_name = 'Resource'
