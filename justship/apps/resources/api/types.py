@@ -20,7 +20,7 @@ class ResourceType(DjangoObjectType):
             'id',
             'title',
             'url',
-            'category',
+            'categories',
             'image',
             'description',
             'creator',
