@@ -91,7 +91,7 @@ class CreateResource(graphene.Mutation):
     resource = graphene.Field(types.ResourceType)
 
     @staticmethod
-    def mutate(root, info, url, categories=None):
+    def mutate(root, info, url, categories=None):  # TO-DO: Update params
         """
         Create a resource. Only for logged users
         :param root:
@@ -112,7 +112,7 @@ class CreateResource(graphene.Mutation):
             return GraphQLError('You must be logged')
 
 
-class UpdateResource(graphene.Mutation):
+class UpdateResource(graphene.Mutation):  # TO-DO: Update param
     class Arguments:
         resource_id = graphene.Int()
         url = graphene.String(required=False)
@@ -144,9 +144,37 @@ class UpdateResource(graphene.Mutation):
             return GraphQLError('You must be logged')
 
 
+class AddVote(graphene.Mutation):
+    class Arguments:
+        url = graphene.String()
+
+    vote = graphene.Field(types.VoteType)
+
+    @staticmethod
+    def mutate(root, info, url):
+        user = info.context.user
+        resource = models.Resource.objects.get(url=url)
+        # only authenticated users can vote
+        if user.is_authenticated:
+            # "anti duplicated info" method
+            obj, created = models.Vote.objects.get_or_create(
+                resource=resource,
+                voted_by=user
+            )
+            # if vote is created update cached counter with 1+ and return object
+            if created:
+                resource.vote_amount += 1
+                resource.save()
+
+                return AddVote(vote=obj)
+        else:
+            return GraphQLError('You must be logged to vote')
+
+
 class ResourceMutations:
     add_category = CreateCategory.Field()
     update_category = UpdateCategory.Field()
     delete_category = DeleteCategory.Field()
     add_resource = CreateResource.Field()
     update_resource = UpdateResource.Field()
+    add_vote = AddVote.Field()
