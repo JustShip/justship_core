@@ -47,3 +47,6 @@ class Vote(TimeStampedModel):
     class Meta:
         verbose_name = 'Vote'
         verbose_name_plural = 'Votes'
+        constraints = [
+            models.UniqueConstraint(fields=['resource', 'voted_by'], name='unique_vote')
+        ]
