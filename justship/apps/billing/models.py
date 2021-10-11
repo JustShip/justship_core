@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.timezone import now
 
+from . import constants
 from justship.apps.core.models import SingletonModel, TimeStampedModel
 from justship.apps.accounts.models import User
 
@@ -31,10 +32,7 @@ class Transaction(TimeStampedModel):
     # billing
     amount = models.FloatField(default=1)
     currency = models.CharField(max_length=3, default='USD')
-    payment_method = models.CharField(max_length=20, choices=(
-        ('paypal', 'PayPal'),
-        ('qvapay', 'QvaPay')
-    ))
+    payment_method = models.CharField(max_length=20, choices=constants.PAYMENT_METHOD_CHOICES)
     days = models.IntegerField(default=30)
 
     # QvaPay related
