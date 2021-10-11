@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='resource',
             name='title',
-            field=models.CharField(default=None, max_length=100, verbose_name='Title'),
+            field=models.CharField(default='', max_length=100, verbose_name='Title'),
             preserve_default=False,
         ),
     ]
