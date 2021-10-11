@@ -22,7 +22,7 @@ class ApiMutationTests(GraphQLTestCase):
             }
             ''',
             op_name='updateUsername',
-            variables={'username': 'ragnarok'}
+            variables={'username': self.user1.username}
         )
         content = json.loads(response.content)
 
