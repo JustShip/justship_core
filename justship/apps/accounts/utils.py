@@ -25,8 +25,20 @@ def generate_token(user: get_user_model()) -> str:
 
 
 def decode_uid(uid: str) -> str:
+    """
+    Decode a base64 encoded string. Add back any trailing equal signs that
+    might have been stripped.
+    :param uid:
+    :return:
+    """
     return urlsafe_base64_decode(uid)
 
 
 def is_correct_token(user: get_user_model(), token: str) -> bool:
+    """
+    Check that a password reset token is correct for a given user.
+    :param user: the user for change password
+    :param token: the token for change password
+    :return: True if token is correct for the given user
+    """
     return default_token_generator.check_token(user, token)

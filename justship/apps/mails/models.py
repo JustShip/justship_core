@@ -9,5 +9,5 @@ class EmailLog(TimeStampedModel):
     subject = models.CharField(max_length=255)
     html = models.TextField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id)

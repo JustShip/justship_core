@@ -46,12 +46,7 @@ def send_system_mail(to: str, subject: str, html: str) -> None:
 
 
 @shared_task
-def send_recovery_mail(to: str, domain: str, uid: str, token: str) -> None:
-    link = constants.PASSWORD_RESET_URL.format(
-        domain=domain,
-        uid=uid,
-        token=token
-    )
-    context = {'link': link}
-    template = render('recovery_mail.html', context)
-    send_system_mail(to, 'Recuperar contraseña', template)
+def send_password_recovery_mail(to: str, temporal_code: str) -> None:
+    # link = constants.PASSWORD_RESET_URL.format(domain=domain)
+    template = render('password_reset.html', {'temporal_code': temporal_code})
+    send_system_mail(to, '¿Olvidaste tu contraseña?', template)

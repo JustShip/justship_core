@@ -35,12 +35,13 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'justship.apps.core.apps.CoreConfig',
     'justship.apps.accounts.apps.AccountsConfig',
-    'justship.apps.products.apps.ProductsConfig',
-    'justship.apps.resources.apps.ResourcesConfig',
-    'justship.apps.mails.apps.MailsConfig',
     'justship.apps.api.apps.ApiConfig',
+    'justship.apps.billing.apps.BillingConfig',
+    'justship.apps.core.apps.CoreConfig',
+    'justship.apps.mails.apps.MailsConfig',
+    'justship.apps.products.apps.ProductsConfig',
+    'justship.apps.resources.apps.ResourcesConfig'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
