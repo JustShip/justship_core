@@ -10,10 +10,6 @@ class ResourceQueries:
     categories = graphene.List(CategoryType)
     resource = graphene.Field(ResourceType, resource_id=graphene.Int())
     all_resources = graphene.List(ResourceType)
-    vote = graphene.Field(VoteType, vote_url=graphene.String())
-
-    def resolve_vote(self, info, vote_url):  # TO-DO: Change search argument or keep it
-        return models.Vote.objects.get(resource=models.Resource.objects.get(url=vote_url))
 
     def resolve_resource(self, info, resource_id):
         return models.Resource.objects.get(pk=resource_id)
