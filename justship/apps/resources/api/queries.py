@@ -2,15 +2,19 @@ import graphene
 
 from .types import CategoryType
 from .. import models
-from .types import ResourceType
+from .types import ResourceType, VoteType
 
 
 class ResourceQueries:
     category = graphene.Field(CategoryType, category_id=graphene.Int())
     categories = graphene.List(CategoryType)
-    resources = graphene.List(ResourceType)
+    resource = graphene.Field(ResourceType, resource_id=graphene.Int())
+    all_resources = graphene.List(ResourceType)
 
-    def resolve_resources(self, info):
+    def resolve_resource(self, info, resource_id):
+        return models.Resource.objects.get(pk=resource_id)
+
+    def resolve_all_resources(self, info):
         return models.Resource.objects.all()
 
     def resolve_category(self, info, category_id):

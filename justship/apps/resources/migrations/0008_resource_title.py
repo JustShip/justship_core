@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('resources', '0006_alter_resource_category'),
+        ('resources', '0007_rename_category_resource_categories'),
     ]
 
     operations = [
