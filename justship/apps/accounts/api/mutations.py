@@ -8,7 +8,6 @@ from django.db.models import Q
 from graphql import GraphQLError
 
 from .types import UserType
-from .. import utils
 from ..models import Follow
 from justship.apps.mails.tasks import send_password_recovery_mail
 
@@ -26,18 +25,15 @@ class TokenAuth(graphene.Mutation):
         password = graphene.String(required=True)
 
     def mutate(self, info, username, password):
-
         User = get_user_model()
 
         try:
-
             if str(username).__contains__('@'):
                 user = User.objects.get(email__iexact=username)
             else:
                 user = User.objects.get(username__iexact=username)
-            
-            if user.check_password(raw_password=password) and user.is_active:
 
+            if user.check_password(raw_password=password) and user.is_active:
                 # Response without first_login
                 payload = jwt_payload(user)
                 token = jwt_encode(payload)
@@ -88,7 +84,7 @@ class UpdateUsername(graphene.Mutation):
     user = graphene.Field(UserType)
 
     class Arguments:
-        username = graphene.String()    
+        username = graphene.String()
 
     @staticmethod
     @login_required
@@ -152,7 +148,7 @@ class ChangePassword(graphene.Mutation):
 
     class Arguments:
         password = graphene.String()
-        new_password = graphene.String()    
+        new_password = graphene.String()
 
     @staticmethod
     def mutate(root, info, password, new_password):
@@ -210,7 +206,7 @@ class UnfollowUser(graphene.Mutation):
             return GraphQLError('You can not unfollow yourself')
 
         to_unfollow = get_user_model().objects.filter(pk=user_id).first()
-        
+
         # check if user exists
         if to_unfollow:
             # check if you follow
