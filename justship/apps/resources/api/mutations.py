@@ -171,6 +171,26 @@ class AddVote(graphene.Mutation):
             return GraphQLError('You must be logged to vote')
 
 
+class DeleteVote(graphene.Mutation):
+    class Arguments:
+        url = graphene.String()
+
+    status = graphene.Boolean()
+
+    @staticmethod
+    def mutate(root, info, url):
+        user = info.context.user
+        resource = models.Resource.objects.get(url=url)
+        # only authenticated users can delete a vote
+        if user.is_authenticated:
+            vote = models.Vote.objects.get(resource=resource, voted_by=user)
+            if vote:
+                vote.delete()
+                return DeleteVote(status=True)
+        else:
+            return GraphQLError('You must be authenticated')
+
+
 class ResourceMutations:
     add_category = CreateCategory.Field()
     update_category = UpdateCategory.Field()
@@ -178,3 +198,4 @@ class ResourceMutations:
     add_resource = CreateResource.Field()
     update_resource = UpdateResource.Field()
     add_vote = AddVote.Field()
+    delete_vote = DeleteVote.Field()
