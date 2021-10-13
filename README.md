@@ -26,6 +26,101 @@ Este proyecto es de la comunidad para la comunidad. Si deseas contribuir monetar
 ## Estructura de carpetas:
 
     .
+    ├── apps                        # carpeta contenedora de aplicaciones
+    │   ├── accounts                # aplicación para gestionar cuentas
+    │   │   ├── api
+    │   │   │  ├── mutatios.py
+    │   │   │  ├── queries.py  
+    │   │   │  ├── schema.py
+    │   │   │  └── types.py
+    │   │   ├── management
+    │   │   │   └── commands
+    │   │   │       └── inituseradmin.py
+    │   │   ├── migrations
+    │   │   ├── tests
+    │   │   │   ├── test_api_mutations.py
+    │   │   │   └── test_models.py
+    │   │   ├── admin.py
+    │   │   ├── apps.py
+    │   │   ├── constants.py
+    │   │   ├── models.py           # modelos
+    │   │   ├── urls.py
+    │   │   ├── utils.py
+    │   │   └── views.py            # vistas
+    │   │
+    │   ├── api
+    │   │   ├── tests
+    │   │   ├── apps.py
+    │   │   └── schema.py
+    │   │
+    │   ├── billing  
+    │   │   ├── api
+    │   │   │   ├── mutations.py
+    │   │   │   ├── queries.py
+    │   │   │   ├── schema.py
+    │   │   │   └── types.py
+    │   │   ├── migrations
+    │   │   ├── tests
+    │   │   ├── admin.py
+    │   │   ├── apps.py
+    │   │   ├── constants.py
+    │   │   ├── models.py
+    │   │   └── views.py
+    │   │
+    │   ├── core                    # aplicación núcleo del proyecto
+    │   │   ├── migrations
+    │   │   ├── tests
+    │   │   │   ├── test_forms.py
+    │   │   │   ├── test_middleware.py
+    │   │   │   ├── test_models.py
+    │   │   │   ├── test_validators.py
+    │   │   │   └── test_views.py
+    │   │   ├── apps.py
+    │   │   ├── middleware          # middlewares del núcleo
+    │   │   ├── models.py           # modelos básicos que pueden ser usados por cualquier aplicación
+    │   │   ├── urls.py
+    │   │   └── views.py
+    │   │
+    │   ├── mails
+    │   │   ├── migrations
+    │   │   ├── templates
+    │   │   │   └── mails
+    │   │   │       └── password_reset.html
+    │   │   ├── tests
+    │   │   ├── admin.py
+    │   │   ├── apps.py             
+    │   │   ├── constants.py
+    │   │   ├── models.py
+    │   │   ├── recievers.py
+    │   │   └── tasks.py
+    │   │
+    │   ├── products
+    │   │   ├── api
+    │   │   │   ├── mutations.py
+    │   │   │   ├── queries.py
+    │   │   │   ├── schema.py
+    │   │   │   └── types.py
+    │   │   ├── migrations
+    │   │   ├── tests
+    │   │   ├── admin.py
+    │   │   ├── apps.py
+    │   │   ├── constants.py
+    │   │   ├── models.py
+    │   │   └── views.py
+    │   │
+    │   └── resources
+    │       ├── api
+    │       │   ├── mutations.py
+    │       │   ├── queries.py
+    │       │   ├── schema.py
+    │       │   └── types.py
+    │       ├── migrations
+    │       ├── tests
+    │       ├── admin.py
+    │       ├── apps.py
+    │       ├── models.py
+    │       └── views.py
+    │   
     ├── config                      # Contiene todos los archivos de configuración
     │   ├── settings                # Contiene la configuración
     │   │   ├── base.py             # contiene las configuraciones base
@@ -33,25 +128,17 @@ Este proyecto es de la comunidad para la comunidad. Si deseas contribuir monetar
     │   │   ├── production.py       # configuración específica para producción
     │   │   └── staging.py          # configuración específica para staging
     │   ├── asgi.py                 # configuración de despliegue asíncrono
+    │   ├── celery
     │   ├── wsgi.py                 # configuración de despliegue
     │   └── urls.py                 # raíz de las url del proyecto
-    ├── justship_core               # carpeta contenedora de aplicaciones
-    │   ├── accounts                # aplicación para gestionar cuentas
-    │   │   ├── admin.py
-    │   │   ├── apps.py
-    │   │   ├── models.py           # modelos
-    │   │   └── views.py            # vistas
-    │   └── core                    # aplicación núcleo del proyecto
-    │   │   ├── apps.py             
-    │   │   ├── middleware.py       # middlewares del núcleo
-    │   │   ├── models.py           # modelos básicos que pueden ser usados por cualquier aplicación
-    │   │   └── views.py
     ├── requirements                # carpeta que contiene los requerimientos del proyecto
     │   ├── base.txt                # requerimientos base
     │   ├── develop.txt             # requerimientos para desarrollo
     │   ├── production.txt          # requerimientos para producción
     │   ├── staging.txt             # requerimientos para staging
     │   └── test.txt                # requerimientos para testing
+    ├──tests
+    │  └── test_env_settings.py
     └── manage.py                   
 
 
