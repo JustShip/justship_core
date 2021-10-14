@@ -98,6 +98,11 @@ class ProductRelationship(TimeStampedModel):
     is_following = models.BooleanField()
     rights = models.CharField(max_length=30, choices=constants.RIGHTS_CHOICES, blank=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'product'], name='Anti_duplicated_relation')
+        ]
+
     def is_recent(self) -> bool:
         """
         Return if the follow is recent or not
