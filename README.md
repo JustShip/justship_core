@@ -26,120 +26,113 @@ Este proyecto es de la comunidad para la comunidad. Si deseas contribuir monetar
 ## Estructura de carpetas:
 
     .
-    ├── apps                        # carpeta contenedora de aplicaciones
-    │   ├── accounts                # aplicación para gestionar cuentas
-    │   │   ├── api
-    │   │   │  ├── mutatios.py
-    │   │   │  ├── queries.py  
-    │   │   │  ├── schema.py
-    │   │   │  └── types.py
-    │   │   ├── management
+    ├── apps                                # contiene todas las aplicaciones
+    │   ├── accounts                        # aplicación para gestionar cuentas
+    │   │   ├── api                         # contiene los GraphQL
+    │   │   │  ├── mutations.py             # mutaciones de GraphQL
+    │   │   │  ├── queries.py               # consultas de GraphQL
+    │   │   │  ├── schema.py                # esquema de  GraphQL
+    │   │   │  └── types.py                 # declaración de los tipos de modelos para GraphQL
+    │   │   ├── management                  # comandos personalizados
     │   │   │   └── commands
     │   │   │       └── inituseradmin.py
-    │   │   ├── migrations
-    │   │   ├── tests
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── tests                       # carpeta contenedora de tests
     │   │   │   ├── test_api_mutations.py
     │   │   │   └── test_models.py
     │   │   ├── admin.py
     │   │   ├── apps.py
-    │   │   ├── constants.py
-    │   │   ├── models.py           # modelos
+    │   │   ├── constants.py                # constantes
+    │   │   ├── models.py                   # modelos de la BBDD
     │   │   ├── urls.py
-    │   │   ├── utils.py
-    │   │   └── views.py            # vistas
-    │   │
-    │   ├── api
-    │   │   ├── tests
+    │   │   ├── utils.py                    # funciones útiles usadas por la aplicación accounts
+    │   │   └── views.py
+    │   ├── api                             # aplicación api
+    │   │   ├── tests                       # contiene todos los tests de api
     │   │   ├── apps.py
-    │   │   └── schema.py
-    │   │
-    │   ├── billing  
-    │   │   ├── api
-    │   │   │   ├── mutations.py
-    │   │   │   ├── queries.py
-    │   │   │   ├── schema.py
-    │   │   │   └── types.py
-    │   │   ├── migrations
-    │   │   ├── tests
+    │   │   └── schema.py                   # llama a todos los esquemas de todas las aplicaciones
+    │   ├── billing                         # aplicación de pagos
+    │   │   ├── api                         # contiene los GraphQL
+    │   │   │   ├── mutations.py            # mutaciones de GraphQL
+    │   │   │   ├── queries.py              # consultas de GraphQL
+    │   │   │   ├── schema.py               # esquema de  GraphQL
+    │   │   │   └── types.py                # declaración de los tipos de modelos para GraphQL
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── tests                       # test de la aplicación billing
     │   │   ├── admin.py
     │   │   ├── apps.py
-    │   │   ├── constants.py
-    │   │   ├── models.py
+    │   │   ├── constants.py                # constantes de la aplicación
+    │   │   ├── models.py                   # modelos
     │   │   └── views.py
-    │   │
-    │   ├── core                    # aplicación núcleo del proyecto
-    │   │   ├── migrations
-    │   │   ├── tests
+    │   ├── core                            # aplicación núcleo del proyecto
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── tests                       # tests
     │   │   │   ├── test_forms.py
     │   │   │   ├── test_middleware.py
     │   │   │   ├── test_models.py
     │   │   │   ├── test_validators.py
     │   │   │   └── test_views.py
     │   │   ├── apps.py
-    │   │   ├── middleware          # middlewares del núcleo
-    │   │   ├── models.py           # modelos básicos que pueden ser usados por cualquier aplicación
+    │   │   ├── middleware                  # middlewares del núcleo
+    │   │   ├── models.py                   # modelos básicos que pueden ser usados por cualquier aplicación
     │   │   ├── urls.py
     │   │   └── views.py
-    │   │
-    │   ├── mails
-    │   │   ├── migrations
-    │   │   ├── templates
+    │   ├── mails                           # aplicación asíncrona para envíos de emails
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── templates                   # plantillas de correos
     │   │   │   └── mails
-    │   │   │       └── password_reset.html
-    │   │   ├── tests
-    │   │   ├── admin.py
-    │   │   ├── apps.py             
-    │   │   ├── constants.py
-    │   │   ├── models.py
-    │   │   ├── recievers.py
-    │   │   └── tasks.py
-    │   │
-    │   ├── products
-    │   │   ├── api
-    │   │   │   ├── mutations.py
-    │   │   │   ├── queries.py
-    │   │   │   ├── schema.py
-    │   │   │   └── types.py
-    │   │   ├── migrations
-    │   │   ├── tests
+    │   │   │       └── password_reset.html # plantilla de correo para reestablecer contraseña
+    │   │   ├── tests                       # tests de la aplicación
     │   │   ├── admin.py
     │   │   ├── apps.py
-    │   │   ├── constants.py
-    │   │   ├── models.py
+    │   │   ├── constants.py                # constantes de la aplicación
+    │   │   ├── models.py                   # modelos
+    │   │   ├── recievers.py
+    │   │   └── tasks.py                    # métodos asícronos con Celery
+    │   ├── products                        # aplicación de productos
+    │   │   ├── api                         # contiene los GraphQL
+    │   │   │   ├── mutations.py            # mutaciones de GraphQL
+    │   │   │   ├── queries.py              # consultas de GraphQL
+    │   │   │   ├── schema.py               # esquema de  GraphQL
+    │   │   │   └── types.py                # declaración de los tipos de modelos para GraphQL
+    │   │   ├── migrations                  # migraciones Django
+    │   │   ├── tests                       # tests de la aplicación
+    │   │   ├── admin.py
+    │   │   ├── apps.py
+    │   │   ├── constants.py                # constantes
+    │   │   ├── models.py                   # modelos
     │   │   └── views.py
-    │   │
-    │   └── resources
-    │       ├── api
-    │       │   ├── mutations.py
-    │       │   ├── queries.py
-    │       │   ├── schema.py
-    │       │   └── types.py
-    │       ├── migrations
-    │       ├── tests
+    │   └── resources                       # aplicación de recursos
+    │       ├── api                         # contiene los GraphQL
+    │       │   ├── mutations.py            # mutaciones de GraphQL
+    │       │   ├── queries.py              # consultas de GraphQL
+    │       │   ├── schema.py               # esquema de  GraphQL
+    │       │   └── types.py                # declaración de los tipos de modelos para GraphQL
+    │       ├── migrations                  # migraciones Django
+    │       ├── tests                       # tests de la aplicación
     │       ├── admin.py
     │       ├── apps.py
-    │       ├── models.py
+    │       ├── models.py                   # modelos
     │       └── views.py
-    │   
-    ├── config                      # Contiene todos los archivos de configuración
-    │   ├── settings                # Contiene la configuración
-    │   │   ├── base.py             # contiene las configuraciones base
-    │   │   ├── develop.py          # configuración específica para desarrollo
-    │   │   ├── production.py       # configuración específica para producción
-    │   │   └── staging.py          # configuración específica para staging
-    │   ├── asgi.py                 # configuración de despliegue asíncrono
+    ├── config                              # Contiene todos los archivos de configuración
+    │   ├── settings                        # Contiene la configuración
+    │   │   ├── base.py                     # contiene las configuraciones base
+    │   │   ├── develop.py                  # configuración específica para desarrollo
+    │   │   ├── production.py               # configuración específica para producción
+    │   │   └── staging.py                  # configuración específica para staging
+    │   ├── asgi.py                         # configuración de despliegue asíncrono
     │   ├── celery
-    │   ├── wsgi.py                 # configuración de despliegue
-    │   └── urls.py                 # raíz de las url del proyecto
-    ├── requirements                # carpeta que contiene los requerimientos del proyecto
-    │   ├── base.txt                # requerimientos base
-    │   ├── develop.txt             # requerimientos para desarrollo
-    │   ├── production.txt          # requerimientos para producción
-    │   ├── staging.txt             # requerimientos para staging
-    │   └── test.txt                # requerimientos para testing
+    │   ├── wsgi.py                         # configuración de despliegue
+    │   └── urls.py                         # raíz de las url del proyecto
+    ├── requirements                        # carpeta que contiene los requerimientos del proyecto
+    │   ├── base.txt                        # requerimientos base
+    │   ├── develop.txt                     # requerimientos para desarrollo
+    │   ├── production.txt                  # requerimientos para producción
+    │   ├── staging.txt                     # requerimientos para staging
+    │   └── test.txt                        # requerimientos para testing
     ├──tests
     │  └── test_env_settings.py
-    └── manage.py                   
+    └── manage.py
 
 
 ## Ejecutar
@@ -196,8 +189,8 @@ Para crear y correr la imagen de docker:
 
 Para detener la imagen de docker:
 
-    docker-compose down  
-    
+    docker-compose down
+
 Para hacer despliegue rápido:
 
     ./build.sh
