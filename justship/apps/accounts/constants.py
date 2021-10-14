@@ -3,3 +3,8 @@ CREATOR_TYPE_CHOICES = (
     ('DEV', 'Developer'),
     ('MAK', 'Maker'),
 )
+
+RIGHTS_CHOICES = (
+    ('owner', 'Is owner'),
+    ('collaborator', 'Is collaborator'),
+)

@@ -93,10 +93,10 @@ class ProductRelationship(TimeStampedModel):
     """
     Model for representing relationships between users and products
     """
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_follower')
-    followed = models.ForeignKey(resources_models.Resource, on_delete=models.CASCADE, related_name='followed_product')
-    is_owner = models.BooleanField()
-    is_collaborator = models.BooleanField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_follower')
+    product = models.ForeignKey(resources_models.Resource, on_delete=models.CASCADE, related_name='followed_product')
+    is_following = models.BooleanField()
+    rights = models.CharField(max_length=30, choices=constants.RIGHTS_CHOICES, blank=True)
 
     def is_recent(self) -> bool:
         """
@@ -107,4 +107,4 @@ class ProductRelationship(TimeStampedModel):
         return now - datetime.timedelta(days=1) <= self.created_at <= now
 
     def __str__(self) -> str:
-        return '{} -> {}'.format(self.follower, self.followed)
+        return '{} -> {}'.format(self.user, self.product)
