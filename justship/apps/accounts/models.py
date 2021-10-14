@@ -97,3 +97,14 @@ class ProductRelationship(TimeStampedModel):
     followed = models.ForeignKey(resources_models.Resource, on_delete=models.CASCADE, related_name='followed_product')
     is_owner = models.BooleanField()
     is_collaborator = models.BooleanField()
+
+    def is_recent(self) -> bool:
+        """
+        Return if the follow is recent or not
+        :return:
+        """
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.created_at <= now
+
+    def __str__(self) -> str:
+        return '{} -> {}'.format(self.follower, self.followed)
