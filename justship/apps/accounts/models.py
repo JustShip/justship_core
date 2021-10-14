@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from justship.apps.accounts import constants
 from justship.apps.core.models import TimeStampedModel
-from justship.apps.resources import models as resources_models
+from justship.apps.products import models as products_models
 
 
 class User(AbstractUser):
@@ -46,7 +46,7 @@ class User(AbstractUser):
     follows = models.ManyToManyField('self', through='Follow')
 
     # product relationship
-    product_relation = models.ManyToManyField(resources_models.Resource, through='ProductRelationship')
+    product_relation = models.ManyToManyField(products_models.Product, through='ProductRelationship')
 
     class Meta:
         ordering = ['username']
@@ -94,7 +94,7 @@ class ProductRelationship(TimeStampedModel):
     Model for representing relationships between users and products
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_follower')
-    product = models.ForeignKey(resources_models.Resource, on_delete=models.CASCADE, related_name='followed_product')
+    product = models.ForeignKey(products_models.Product, on_delete=models.CASCADE, related_name='followed_product')
     is_following = models.BooleanField()
     rights = models.CharField(max_length=30, choices=constants.RIGHTS_CHOICES, blank=True)
 
