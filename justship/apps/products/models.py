@@ -2,6 +2,7 @@ from django.db import models
 
 from justship.apps.core.models import Tag, Social
 from justship.apps.products.constants import PRODUCT_STATE_CHOICES
+from django.conf import settings
 
 
 class Product(models.Model):
@@ -17,6 +18,9 @@ class Product(models.Model):
     logo_file_id = models.CharField(max_length=255, null=True, blank=True)
     logo_url = models.URLField(null=True, blank=True)
     logo_thumbnail_url = models.URLField(null=True, blank=True)
+
+    # ownership
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return str(self.name)
