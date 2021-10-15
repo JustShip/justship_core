@@ -24,6 +24,11 @@ class FollowAdmin(admin.ModelAdmin):
     list_filter = ['followed__first_name']
     search_fields = ['created_at', 'follower', 'followed']
 
+@admin.register(models.ProductRelationship)
+class ProductRelationshipAdmin(admin.ModelAdmin):
+    list_display = ['user', 'product', 'created_at', 'is_recent']
+    search_fields = ['created_at', 'user', 'product']
+
 
 # Remove Group from Django admin
 admin.site.unregister(Group)

@@ -1,6 +1,6 @@
 from graphene_django import DjangoObjectType
 
-from justship.apps.accounts.models import User
+from justship.apps.accounts.models import User, ProductRelationship
 
 
 class UserType(DjangoObjectType):
@@ -24,10 +24,23 @@ class UserType(DjangoObjectType):
             'is_active',
             'date_joined',
             'last_login',
-            
+            'product_relation',
+
+        )
+
+
+class ProductRelationshipType(DjangoObjectType):
+    class Meta:
+        model = ProductRelationship
+        only_fields = (
+            'user',
+            'product',
+            'is_following',
+            'rights',
+
         )
 
 
 user_types = [
-    UserType
+    UserType, ProductRelationshipType
 ]

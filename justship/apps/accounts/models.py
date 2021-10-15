@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from justship.apps.accounts import constants
 from justship.apps.core.models import TimeStampedModel
+from justship.apps.products import models as products_models
 
 
 class User(AbstractUser):
@@ -43,6 +44,9 @@ class User(AbstractUser):
     cover_thumbnail_url = models.URLField(null=True, blank=True)
 
     follows = models.ManyToManyField('self', through='Follow')
+
+    # product relationship
+    product_relation = models.ManyToManyField(products_models.Product, through='ProductRelationship')
 
     class Meta:
         ordering = ['username']
@@ -83,3 +87,29 @@ class Follow(TimeStampedModel):
 
     def __str__(self) -> str:
         return '{} -> {}'.format(self.follower, self.followed)
+
+
+class ProductRelationship(TimeStampedModel):
+    """
+    Model for representing relationships between users and products
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_follower')
+    product = models.ForeignKey(products_models.Product, on_delete=models.CASCADE, related_name='followed_product')
+    is_following = models.BooleanField()
+    rights = models.CharField(max_length=30, choices=constants.RIGHTS_CHOICES, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'product'], name='Anti_duplicated_relation')
+        ]
+
+    def is_recent(self) -> bool:
+        """
+        Return if the follow is recent or not
+        :return:
+        """
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.created_at <= now
+
+    def __str__(self) -> str:
+        return '{} -> {}'.format(self.user, self.product)
