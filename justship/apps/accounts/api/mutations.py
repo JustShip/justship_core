@@ -227,6 +227,13 @@ class FollowProduct(graphene.Mutation):
     @staticmethod
     @login_required
     def mutate(root, info, product_id):
+        """
+        Create or update an existing relationship with 'is_following' attribute set to True
+        :param root:
+        :param info:
+        :param product_id: Product's id
+        :return: Confirmation if follow was done successfully
+        """
         user = info.context.user
         product = product_models.Product.objects.get(pk=product_id)
 
@@ -254,6 +261,13 @@ class UnfollowProduct(graphene.Mutation):
     @staticmethod
     @login_required
     def mutate(root, info, product_id):
+        """
+        Update existing relationship setting 'is_follow' attribute to False
+        :param root:
+        :param info:
+        :param product_id: Product's id
+        :return: Confirmation if unfollow was done successfully
+        """
         user = info.context.user
         product = product_models.Product.objects.get(pk=product_id)
         relation = ProductRelationship.objects.get(user=user, product=product)
@@ -264,6 +278,36 @@ class UnfollowProduct(graphene.Mutation):
             return UnfollowProduct(ok=True)
         else:
             return GraphQLError('Error unfollowing')
+
+
+class ChangeRights(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        product_id = graphene.Int()
+        rights = graphene.String()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, product_id, rights):
+        """
+        Change rights over a product
+        :param root:
+        :param info:
+        :param product_id: Product's id
+        :param rights:  Rights over a product
+        :return: Confirmation if change was done successfully
+        """
+        user = info.context.user
+        product = product_models.Product.objects.get(pk=product_id)
+        relation = ProductRelationship.objects.get(user=user, product=product)
+
+        if relation:
+            relation.rights = rights
+            relation.save()
+            return ChangeRights(ok=True)
+        else:
+            return GraphQLError("Error changing rights")
 
 
 class UserMutations(graphene.ObjectType):
@@ -285,3 +329,4 @@ class UserMutations(graphene.ObjectType):
     unfollow = UnfollowUser.Field()
     follow_product = FollowProduct.Field()
     unfollow_product = UnfollowProduct.Field()
+    change_rights = ChangeRights.Field()
