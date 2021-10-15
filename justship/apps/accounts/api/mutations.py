@@ -8,7 +8,7 @@ from django.db.models import Q
 from graphql import GraphQLError
 
 from .types import UserType
-from ..models import Follow, ProductRelationship
+from ..models import Follow
 from justship.apps.mails.tasks import send_password_recovery_mail
 from justship.apps.products import models as product_models
 
@@ -228,7 +228,7 @@ class FollowProduct(graphene.Mutation):
     @login_required
     def mutate(root, info, product_id):
         """
-        Create or update an existing relationship with 'is_following' attribute set to True
+        Add a product to an user's 'followed_products' attribute
         :param root:
         :param info:
         :param product_id: Product's id
@@ -237,19 +237,12 @@ class FollowProduct(graphene.Mutation):
         user = info.context.user
         product = product_models.Product.objects.get(pk=product_id)
 
-        obj, created = ProductRelationship.objects.get_or_create(
-            user=user,
-            product=product,
-            defaults={"is_following": True}
-        )
-        if created:
-            return FollowProduct(ok=created)
-        elif not created and not obj.is_following:
-            obj.is_following = True
-            obj.save()
+        if product:
+            user.followed_products.add(product)
+            user.save()
             return FollowProduct(ok=True)
         else:
-            return GraphQLError('Error Following')
+            return GraphQLError('Error following a product')
 
 
 class UnfollowProduct(graphene.Mutation):
@@ -262,7 +255,7 @@ class UnfollowProduct(graphene.Mutation):
     @login_required
     def mutate(root, info, product_id):
         """
-        Update existing relationship setting 'is_follow' attribute to False
+        Remove a product from an user's 'followed_products' attribute
         :param root:
         :param info:
         :param product_id: Product's id
@@ -270,44 +263,12 @@ class UnfollowProduct(graphene.Mutation):
         """
         user = info.context.user
         product = product_models.Product.objects.get(pk=product_id)
-        relation = ProductRelationship.objects.get(user=user, product=product)
-
-        if relation.is_following:
-            relation.is_following = False
-            relation.save()
+        if product:
+            user.followed_products.remove(product)
+            user.save()
             return UnfollowProduct(ok=True)
         else:
-            return GraphQLError('Error unfollowing')
-
-
-class ChangeRights(graphene.Mutation):
-    ok = graphene.Boolean()
-
-    class Arguments:
-        product_id = graphene.Int()
-        rights = graphene.String()
-
-    @staticmethod
-    @login_required
-    def mutate(root, info, product_id, rights):
-        """
-        Change rights over a product
-        :param root:
-        :param info:
-        :param product_id: Product's id
-        :param rights:  Rights over a product
-        :return: Confirmation if change was done successfully
-        """
-        user = info.context.user
-        product = product_models.Product.objects.get(pk=product_id)
-        relation = ProductRelationship.objects.get(user=user, product=product)
-
-        if relation:
-            relation.rights = rights
-            relation.save()
-            return ChangeRights(ok=True)
-        else:
-            return GraphQLError("Error changing rights")
+            return GraphQLError('Error unfollowing a product')
 
 
 class UserMutations(graphene.ObjectType):
@@ -329,4 +290,3 @@ class UserMutations(graphene.ObjectType):
     unfollow = UnfollowUser.Field()
     follow_product = FollowProduct.Field()
     unfollow_product = UnfollowProduct.Field()
-    change_rights = ChangeRights.Field()
