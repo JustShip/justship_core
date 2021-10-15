@@ -8,8 +8,9 @@ from django.db.models import Q
 from graphql import GraphQLError
 
 from .types import UserType
-from ..models import Follow
+from ..models import Follow, ProductRelationship
 from justship.apps.mails.tasks import send_password_recovery_mail
+from justship.apps.products import models as product_models
 
 
 class TokenAuth(graphene.Mutation):
@@ -217,6 +218,54 @@ class UnfollowUser(graphene.Mutation):
             return GraphQLError('Wrong user id')
 
 
+class FollowProduct(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        product_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, product_id):
+        user = info.context.user
+        product = product_models.Product.objects.get(pk=product_id)
+
+        obj, created = ProductRelationship.objects.get_or_create(
+            user=user,
+            product=product,
+            defaults={"is_following": True}
+        )
+        if created:
+            return FollowProduct(ok=created)
+        elif not created and not obj.is_following:
+            obj.is_following = True
+            obj.save()
+            return FollowProduct(ok=True)
+        else:
+            return GraphQLError('Error Following')
+
+
+class UnfollowProduct(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        product_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, product_id):
+        user = info.context.user
+        product = product_models.Product.objects.get(pk=product_id)
+        relation = ProductRelationship.objects.get(user=user, product=product)
+
+        if relation.is_following:
+            relation.is_following = False
+            relation.save()
+            return UnfollowProduct(ok=True)
+        else:
+            return GraphQLError('Error unfollowing')
+
+
 class UserMutations(graphene.ObjectType):
     # authenticate the User with its username or email and password to obtain the JSON Web token.
     token_auth = TokenAuth.Field()
@@ -234,3 +283,5 @@ class UserMutations(graphene.ObjectType):
     change_password = ChangePassword.Field()
     follow = FollowUser.Field()
     unfollow = UnfollowUser.Field()
+    follow_product = FollowProduct.Field()
+    unfollow_product = UnfollowProduct.Field()
