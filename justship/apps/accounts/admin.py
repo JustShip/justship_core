@@ -11,10 +11,10 @@ class UserAdmin(UserAdmin):
     list_filter = ['is_superuser']
     search_fields = ['username', 'first_name', 'last_name']
     fieldsets = UserAdmin.fieldsets + (
-        ('Otros datos', {'fields': ('creator_type',)}),
+        ('Otros datos', {'fields': ('creator_type', 'followed_products')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Otros datos', {'fields': ('creator_type',)}),
+        ('Otros datos', {'fields': ('creator_type', 'followed_products')}),
     )
 
 
@@ -23,11 +23,6 @@ class FollowAdmin(admin.ModelAdmin):
     list_display = ['follower', 'followed', 'created_at', 'is_recent']
     list_filter = ['followed__first_name']
     search_fields = ['created_at', 'follower', 'followed']
-
-@admin.register(models.ProductRelationship)
-class ProductRelationshipAdmin(admin.ModelAdmin):
-    list_display = ['user', 'product', 'created_at', 'is_recent']
-    search_fields = ['created_at', 'user', 'product']
 
 
 # Remove Group from Django admin
