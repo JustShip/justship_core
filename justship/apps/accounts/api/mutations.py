@@ -11,6 +11,7 @@ from .types import UserType
 from ..models import Follow
 from justship.apps.mails.tasks import send_password_recovery_mail
 from justship.apps.products import models as product_models
+from justship.apps.resources import models as resources_models
 
 
 class TokenAuth(graphene.Mutation):
@@ -271,6 +272,52 @@ class UnfollowProduct(graphene.Mutation):
             return GraphQLError('Error unfollowing a product')
 
 
+class SaveResource(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        resource_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, resource_id):
+        """
+        Add a resource to an user 'saved_resources' field
+        """
+        user = info.context.user
+        resource = resources_models.Resource.objects.get(pk=resource_id)
+
+        if resource not in user.saved_resources.all():
+            user.saved_resources.add(resource)
+            user.save
+            return SaveResource(ok=True)
+        else:
+            return GraphQLError("Already saved")
+
+
+class DeleteSavedResource(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        resource_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, resource_id):
+        """
+        Remove a resource from an user 'saved_resources' field
+        """
+        user = info.context.user
+        resource = resources_models.Resource.objects.get(pk=resource_id)
+
+        if resource in user.saved_resources.all():
+            user.saved_resources.remove(resource)
+            user.save
+            return DeleteSavedResource(ok=True)
+        else:
+            return GraphQLError("Resource doesn't exists on user saved_resources list ")
+
+
 class UserMutations(graphene.ObjectType):
     # authenticate the User with its username or email and password to obtain the JSON Web token.
     token_auth = TokenAuth.Field()
@@ -290,3 +337,5 @@ class UserMutations(graphene.ObjectType):
     unfollow = UnfollowUser.Field()
     follow_product = FollowProduct.Field()
     unfollow_product = UnfollowProduct.Field()
+    save_resource = SaveResource.Field()
+    delete_saved_resource = DeleteSavedResource.Field()
