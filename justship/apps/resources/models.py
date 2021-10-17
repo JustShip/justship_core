@@ -17,7 +17,7 @@ class Category(models.Model):
 
 
 class Resource(TimeStampedModel):
-    url = models.URLField()
+    url = models.URLField(unique=True)
     title = models.CharField(verbose_name='Title', max_length=100)
     image = models.URLField(verbose_name='Image', null=True, blank=True)
     description = models.TextField(verbose_name='Description', null=True, blank=True)
