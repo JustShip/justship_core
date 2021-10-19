@@ -11,10 +11,10 @@ class UserAdmin(UserAdmin):
     list_filter = ['is_superuser']
     search_fields = ['username', 'first_name', 'last_name']
     fieldsets = UserAdmin.fieldsets + (
-        ('Otros datos', {'fields': ('creator_type',)}),
+        ('Otros datos', {'fields': ('creator_type', 'followed_products', 'saved_resources')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Otros datos', {'fields': ('creator_type',)}),
+        ('Otros datos', {'fields': ('creator_type', 'followed_products', 'saved_resources')}),
     )
 
 

@@ -8,9 +8,10 @@ from django.db.models import Q
 from graphql import GraphQLError
 
 from .types import UserType
-from .. import utils
 from ..models import Follow
 from justship.apps.mails.tasks import send_password_recovery_mail
+from justship.apps.products import models as product_models
+from justship.apps.resources import models as resources_models
 
 
 class TokenAuth(graphene.Mutation):
@@ -26,16 +27,14 @@ class TokenAuth(graphene.Mutation):
         password = graphene.String(required=True)
 
     def mutate(self, info, username, password):
-
         User = get_user_model()
 
         try:
-
             if str(username).__contains__('@'):
                 user = User.objects.get(email__iexact=username)
             else:
                 user = User.objects.get(username__iexact=username)
-            
+           
             if user.check_password(password) and user.is_active:
 
                 # Response without first_login
@@ -88,7 +87,7 @@ class UpdateUsername(graphene.Mutation):
     user = graphene.Field(UserType)
 
     class Arguments:
-        username = graphene.String()    
+        username = graphene.String()
 
     @staticmethod
     @login_required
@@ -152,7 +151,7 @@ class ChangePassword(graphene.Mutation):
 
     class Arguments:
         password = graphene.String()
-        new_password = graphene.String()    
+        new_password = graphene.String()
 
     @staticmethod
     def mutate(root, info, password, new_password):
@@ -210,7 +209,7 @@ class UnfollowUser(graphene.Mutation):
             return GraphQLError('You can not unfollow yourself')
 
         to_unfollow = get_user_model().objects.filter(pk=user_id).first()
-        
+
         # check if user exists
         if to_unfollow:
             # check if you follow
@@ -219,6 +218,105 @@ class UnfollowUser(graphene.Mutation):
             return UnfollowUser(ok=True)
         else:
             return GraphQLError('Wrong user id')
+
+
+class FollowProduct(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        product_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, product_id):
+        """
+        Add a product to an user's 'followed_products' attribute
+        :param root:
+        :param info:
+        :param product_id: Product's id
+        :return: Confirmation if follow was done successfully
+        """
+        user = info.context.user
+        product = product_models.Product.objects.get(pk=product_id)
+
+        if product:
+            user.followed_products.add(product)
+            user.save()
+            return FollowProduct(ok=True)
+        else:
+            return GraphQLError('Error following a product')
+
+
+class UnfollowProduct(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        product_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, product_id):
+        """
+        Remove a product from an user's 'followed_products' attribute
+        :param root:
+        :param info:
+        :param product_id: Product's id
+        :return: Confirmation if unfollow was done successfully
+        """
+        user = info.context.user
+        product = product_models.Product.objects.get(pk=product_id)
+        if product:
+            user.followed_products.remove(product)
+            user.save()
+            return UnfollowProduct(ok=True)
+        else:
+            return GraphQLError('Error unfollowing a product')
+
+
+class SaveResource(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        resource_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, resource_id):
+        """
+        Add a resource to an user 'saved_resources' field
+        """
+        user = info.context.user
+        resource = resources_models.Resource.objects.get(pk=resource_id)
+
+        if resource not in user.saved_resources.all():
+            user.saved_resources.add(resource)
+            user.save
+            return SaveResource(ok=True)
+        else:
+            return GraphQLError("Already saved")
+
+
+class DeleteSavedResource(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        resource_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, resource_id):
+        """
+        Remove a resource from an user 'saved_resources' field
+        """
+        user = info.context.user
+        resource = resources_models.Resource.objects.get(pk=resource_id)
+
+        if resource in user.saved_resources.all():
+            user.saved_resources.remove(resource)
+            user.save
+            return DeleteSavedResource(ok=True)
+        else:
+            return GraphQLError("Resource doesn't exists on user saved_resources list ")
 
 
 class UserMutations(graphene.ObjectType):
@@ -238,3 +336,7 @@ class UserMutations(graphene.ObjectType):
     change_password = ChangePassword.Field()
     follow = FollowUser.Field()
     unfollow = UnfollowUser.Field()
+    follow_product = FollowProduct.Field()
+    unfollow_product = UnfollowProduct.Field()
+    save_resource = SaveResource.Field()
+    delete_saved_resource = DeleteSavedResource.Field()

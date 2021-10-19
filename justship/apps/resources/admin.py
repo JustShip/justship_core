@@ -12,6 +12,13 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(models.Resource)
 class ResourceAdmin(admin.ModelAdmin):
-    fields = ['url', 'category', 'image', 'description', 'creator']
+    fields = ['url', 'categories', 'image', 'description', 'creator']
     list_display = ['url', 'description', 'creator']
     search_fields = ['url', 'description']
+
+
+@admin.register(models.Vote)
+class VoteAdmin(admin.ModelAdmin):
+    fields = ['resource', 'voted_by']
+    list_display = ['resource', 'voted_by']
+    search_fields = ['resource', 'voted_by']

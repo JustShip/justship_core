@@ -24,7 +24,9 @@ class UserType(DjangoObjectType):
             'is_active',
             'date_joined',
             'last_login',
-            
+            'followed_products',
+            'saved_resources'
+
         )
 
 

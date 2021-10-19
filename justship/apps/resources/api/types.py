@@ -1,6 +1,6 @@
 from graphene_django import DjangoObjectType
 
-from ..models import Resource, Category
+from ..models import Resource, Category, Vote
 
 
 class CategoryType(DjangoObjectType):
@@ -18,14 +18,25 @@ class ResourceType(DjangoObjectType):
         model = Resource
         only_fields = (
             'id',
+            'title',
             'url',
-            'category',
+            'categories',
             'image',
             'description',
             'creator',
+            'vote_amount'
+        )
+
+
+class VoteType(DjangoObjectType):
+    class Meta:
+        model = Vote
+        only_fields = (
+            'resource',
+            'voted_by'
         )
 
 
 resource_types = [
-    ResourceType, CategoryType
+    ResourceType, CategoryType, VoteType
 ]
