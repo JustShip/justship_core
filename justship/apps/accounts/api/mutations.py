@@ -65,12 +65,12 @@ class SignUp(graphene.Mutation):
     user = graphene.Field(UserType)
 
     class Arguments:
-        username = graphene.String()
+        # username = graphene.String()
         email = graphene.String()
         password = graphene.String()
 
     @staticmethod
-    def mutate(root, info, username, email, password):
+    def mutate(root, info, email, password):
 
         if info.context.user.is_anonymous:
 
