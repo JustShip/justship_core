@@ -19,6 +19,7 @@ celery = "^5.1.2"
 redis = "^3.5.3"
 python-dotenv = "^0.19.0"
 django-graphql-jwt = "0.3.4"
+django-cors-headers = "^3.10.0"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "4.2.0"

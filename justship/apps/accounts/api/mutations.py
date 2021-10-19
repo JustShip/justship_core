@@ -34,8 +34,9 @@ class TokenAuth(graphene.Mutation):
                 user = User.objects.get(email__iexact=username)
             else:
                 user = User.objects.get(username__iexact=username)
+           
+            if user.check_password(password) and user.is_active:
 
-            if user.check_password(raw_password=password) and user.is_active:
                 # Response without first_login
                 payload = jwt_payload(user)
                 token = jwt_encode(payload)
