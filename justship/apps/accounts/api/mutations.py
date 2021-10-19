@@ -105,6 +105,54 @@ class SignUp(graphene.Mutation):
         return SignUp(user=None)
 
 
+class EmailCodeAuth(graphene.Mutation):
+    """
+    Login user with email temporal code
+    """
+    status = graphene.String()
+    token = graphene.String()
+    user = graphene.Field(UserType)
+
+    class Arguments:
+        email = graphene.String()
+        code = graphene.String()
+
+    def mutate(self, info, email, code):        
+
+        User = get_user_model()
+
+        try:
+
+            email = str(email).lower()
+
+            user = User.objects.get(email=email)
+
+            if user.temporal_code == code:
+            
+                user.activate()
+                user.temporal_code = None
+                user.save()
+
+                payload = jwt_payload(user)
+                token = jwt_encode(payload)
+
+                token_issued.send(
+                    sender=self.__class__,
+                    request=info.context,
+                    user=user
+                )
+
+                return EmailCodeAuth(status='ok', token=token, user=user)
+            
+            else:
+
+                return EmailCodeAuth(status='wrong-code')
+
+        except User.DoesNotExist:
+
+            return EmailCodeAuth(status='forbidden')
+
+
 class UpdateUsername(graphene.Mutation):
     """
     Update current user's username
@@ -356,6 +404,7 @@ class UserMutations(graphene.ObjectType):
     refresh_token = graphql_jwt.Refresh.Field()
 
     sign_up = SignUp.Field()
+    email_code_auth = EmailCodeAuth.Field()
     update_username = UpdateUsername.Field()
     password_reset = PasswordReset.Field()
     password_reset_confirm = PasswordResetConfirm.Field()
