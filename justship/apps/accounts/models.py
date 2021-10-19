@@ -57,6 +57,9 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return self.get_full_name() or self.username
+    
+    def activate(self):
+        self.is_active = True
 
     def generate_temporal_code(self) -> str:
         """

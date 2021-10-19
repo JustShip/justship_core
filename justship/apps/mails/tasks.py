@@ -46,6 +46,22 @@ def send_system_mail(to: str, subject: str, html: str) -> None:
 
 
 @shared_task
+def send_temporal_code(to: str, temporal_code: str) -> None:
+
+    send_mail(
+        sender=EMAIL,
+        to=[to],
+        subject='Tu código de confirmación en JustShip',
+        html=render(
+            template='temporal_code.html',
+            context={
+                'temporal_code': temporal_code,
+            }
+        )
+    )
+
+
+@shared_task
 def send_password_recovery_mail(to: str, temporal_code: str) -> None:
     # link = constants.PASSWORD_RESET_URL.format(domain=domain)
     template = render('password_reset.html', {'temporal_code': temporal_code})

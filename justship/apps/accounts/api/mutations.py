@@ -1,17 +1,21 @@
+import requests
 import graphene
 import graphql_jwt
 from graphql_jwt.decorators import login_required
 from graphql_jwt.utils import jwt_payload, jwt_encode
 from graphql_jwt.signals import token_issued
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db.models import Q
 from graphql import GraphQLError
 
-from .types import UserType
-from ..models import Follow
-from justship.apps.mails.tasks import send_password_recovery_mail
+from justship.apps.accounts.models import Follow
+from justship.apps.accounts.api.types import UserType
+from justship.apps.core import signals
 from justship.apps.products import models as product_models
 from justship.apps.resources import models as resources_models
+from justship.apps.mails.tasks import send_password_recovery_mail
+
 
 
 class TokenAuth(graphene.Mutation):
@@ -59,24 +63,110 @@ class SignUp(graphene.Mutation):
     """
     Register user
     """
+    status = graphene.String()
     user = graphene.Field(UserType)
 
     class Arguments:
-        username = graphene.String()
+        token = graphene.String()
         email = graphene.String()
         password = graphene.String()
 
     @staticmethod
-    def mutate(root, info, username, email, password):
+    def mutate(root, info, token, email, password):
+
         if info.context.user.is_anonymous:
-            user = get_user_model()(
-                username=username,
-                email=email
-            )
-            user.set_password(password)
-            user.save()
-            return SignUp(user=user)
-        return SignUp(user=None)
+
+            User = get_user_model()
+
+            try:
+
+                User.objects.get(email=email)
+
+                return SignUp(status='already-registered', user=None)
+            
+            except User.DoesNotExist:
+
+                # Verify reCaptcha token
+                success = requests.post(
+                    'https://www.google.com/recaptcha/api/siteverify',
+                    data={
+                        'secret': settings.GOOGLE_RECAPTCHA_PRIVATE_KEY,
+                        'response': token,
+                        'remoteip': info.context.META['REMOTE_ADDR']
+                    },
+                    verify=True
+                ).json().get("success", False)
+
+                if success:
+
+                    user = User.objects.create(
+                        email=email,
+                        is_active=False
+                    )
+                    user.generate_temporal_code()
+                    user.set_password(password)
+                    user.save()
+
+                    signals.user_registered.send(
+                        sender=root.__class__,
+                        user=user
+                    )
+
+                    return SignUp(status='ok', user=user)
+                
+                else:
+
+                    return SignUp(status='forbidden', user=None)
+        
+        return SignUp(status='forbidden', user=None)
+
+
+class EmailCodeAuth(graphene.Mutation):
+    """
+    Login user with email temporal code
+    """
+    status = graphene.String()
+    token = graphene.String()
+    user = graphene.Field(UserType)
+
+    class Arguments:
+        email = graphene.String()
+        code = graphene.String()
+
+    def mutate(self, info, email, code):        
+
+        User = get_user_model()
+
+        try:
+
+            email = str(email).lower()
+
+            user = User.objects.get(email=email)
+
+            if user.temporal_code == code:
+            
+                user.activate()
+                user.temporal_code = None
+                user.save()
+
+                payload = jwt_payload(user)
+                token = jwt_encode(payload)
+
+                token_issued.send(
+                    sender=self.__class__,
+                    request=info.context,
+                    user=user
+                )
+
+                return EmailCodeAuth(status='ok', token=token, user=user)
+            
+            else:
+
+                return EmailCodeAuth(status='wrong-code')
+
+        except User.DoesNotExist:
+
+            return EmailCodeAuth(status='forbidden')
 
 
 class UpdateUsername(graphene.Mutation):
@@ -330,6 +420,7 @@ class UserMutations(graphene.ObjectType):
     refresh_token = graphql_jwt.Refresh.Field()
 
     sign_up = SignUp.Field()
+    email_code_auth = EmailCodeAuth.Field()
     update_username = UpdateUsername.Field()
     password_reset = PasswordReset.Field()
     password_reset_confirm = PasswordResetConfirm.Field()
