@@ -1,9 +1,11 @@
+import requests
 import graphene
 import graphql_jwt
 from graphql_jwt.decorators import login_required
 from graphql_jwt.utils import jwt_payload, jwt_encode
 from graphql_jwt.signals import token_issued
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db.models import Q
 from graphql import GraphQLError
 
@@ -65,12 +67,12 @@ class SignUp(graphene.Mutation):
     user = graphene.Field(UserType)
 
     class Arguments:
-        # username = graphene.String()
+        token = graphene.String()
         email = graphene.String()
         password = graphene.String()
 
     @staticmethod
-    def mutate(root, info, email, password):
+    def mutate(root, info, token, email, password):
 
         if info.context.user.is_anonymous:
 
@@ -84,25 +86,39 @@ class SignUp(graphene.Mutation):
             
             except User.DoesNotExist:
 
-                # TODO: Captcha
+                # Verify reCaptcha token
+                success = requests.post(
+                    'https://www.google.com/recaptcha/api/siteverify',
+                    data={
+                        'secret': settings.GOOGLE_RECAPTCHA_PRIVATE_KEY,
+                        'response': token,
+                        'remoteip': info.context.META['REMOTE_ADDR']
+                    },
+                    verify=True
+                ).json().get("success", False)
 
-                user = User.objects.create(
-                    # username ?
-                    email=email,
-                    is_active=False
-                )
-                user.generate_temporal_code()
-                user.set_password(password)
-                user.save()
+                if success:
 
-                signals.user_registered.send(
-                    sender=root.__class__,
-                    user=user
-                )
+                    user = User.objects.create(
+                        email=email,
+                        is_active=False
+                    )
+                    user.generate_temporal_code()
+                    user.set_password(password)
+                    user.save()
 
-            return SignUp(status='ok', user=user)
+                    signals.user_registered.send(
+                        sender=root.__class__,
+                        user=user
+                    )
+
+                    return SignUp(status='ok', user=user)
+                
+                else:
+
+                    return SignUp(status='forbidden', user=None)
         
-        return SignUp(user=None)
+        return SignUp(status='forbidden', user=None)
 
 
 class EmailCodeAuth(graphene.Mutation):

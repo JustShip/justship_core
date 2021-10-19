@@ -161,6 +161,11 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # graphene configuration
 GRAPHENE = {
     'SCHEMA': 'justship.apps.api.schema.schema',
@@ -169,7 +174,5 @@ GRAPHENE = {
     ],
 }
 
-AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
+# Integrations
+GOOGLE_RECAPTCHA_PRIVATE_KEY = get_env_variable('GOOGLE_RECAPTCHA_PRIVATE_KEY')
