@@ -7,11 +7,13 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from graphql import GraphQLError
 
-from .types import UserType
-from ..models import Follow
-from justship.apps.mails.tasks import send_password_recovery_mail
+from justship.apps.accounts.models import Follow
+from justship.apps.accounts.api.types import UserType
+from justship.apps.core import signals
 from justship.apps.products import models as product_models
 from justship.apps.resources import models as resources_models
+from justship.apps.mails.tasks import send_password_recovery_mail
+
 
 
 class TokenAuth(graphene.Mutation):
@@ -59,6 +61,7 @@ class SignUp(graphene.Mutation):
     """
     Register user
     """
+    status = graphene.String()
     user = graphene.Field(UserType)
 
     class Arguments:
@@ -68,14 +71,37 @@ class SignUp(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, username, email, password):
+
         if info.context.user.is_anonymous:
-            user = get_user_model()(
-                username=username,
-                email=email
-            )
-            user.set_password(password)
-            user.save()
-            return SignUp(user=user)
+
+            User = get_user_model()
+
+            try:
+
+                User.objects.get(email=email)
+
+                return SignUp(status='already-registered', user=None)
+            
+            except User.DoesNotExist:
+
+                # TODO: Captcha
+
+                user = User.objects.create(
+                    # username ?
+                    email=email,
+                    is_active=False
+                )
+                user.generate_temporal_code()
+                user.set_password(password)
+                user.save()
+
+                signals.user_registered.send(
+                    sender=root.__class__,
+                    user=user
+                )
+
+            return SignUp(status='ok', user=user)
+        
         return SignUp(user=None)
 
 
