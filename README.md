@@ -143,6 +143,11 @@ Para instalar las dependencias solo debe ejecutar:
 
     pip install -r requirements/develop.txt
 
+### Instalar pre-commit
+Instalar pre-commit para evitar posibles errores en el código antes del push
+
+    pre-commit install
+
 ### Base de datos
 Este proyecto en modo desarrollo usa SQlite por lo que solo tienes que ejecutar las migraciones:
 
