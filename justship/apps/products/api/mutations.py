@@ -40,5 +40,29 @@ class CreateProduct(graphene.Mutation):
             return GraphQLError("Object with same name already exists")
 
 
+class DeleteProduct(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments():
+        product_id = graphene.Int()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, product_id):
+        user = info.context.user
+        try:
+            product = Product.objects.get(pk=product_id)
+            if user == product.owner:
+                product.delete()
+                return DeleteProduct(ok=True)
+            else:
+                return GraphQLError("You must be product's owner")
+        except:
+            return GraphQLError("Product doesn't exists")
+
+
+
+
 class ProductMutations:
     create_product = CreateProduct.Field()
+    delete_product = DeleteProduct.Field()
