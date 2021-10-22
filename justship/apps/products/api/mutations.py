@@ -32,8 +32,8 @@ class CreateProduct(graphene.Mutation):
             new_product.save()
             if tags:
                 tags_list = Tag.objects.filter(name__in=tags)
-                new_product.tags.add(*tags_list)
-            new_product.save()
+                new_product.tags.set(*tags_list)
+                new_product.save()
             return CreateProduct(product=new_product)
 
         except:
@@ -61,8 +61,41 @@ class DeleteProduct(graphene.Mutation):
             return GraphQLError("Product doesn't exists")
 
 
+class UpdateProduct(graphene.Mutation):
+    product = graphene.Field(ProductType)
+
+    class Arguments:
+        product_id = graphene.Int()
+        name = graphene.String(required=False)
+        description = graphene.String(required=False)
+        link = graphene.String(required=False)
+        state = graphene.String(required=False)
+        tags = graphene.List(graphene.String, required=False)
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, product_id, name=None, description=None, link=None, state=None, tags=None):
+        user = info.context.user
+        try:
+            product = Product.objects.get(pk=product_id)
+            if user == product.owner:
+                product.name = name or product.name
+                product.description = description or product.description
+                product.link = link or product.link
+                product.state = state or product.state
+                product.save()
+                if tags:
+                    tags_list = Tag.objects.filter(name__in=tags)
+                    product.tags.set(tags_list)
+                    product.save()
+                return UpdateProduct(product=product)
+            else:
+                return GraphQLError("You must be the product's owner")
+        except:
+            return GraphQLError("Object doesn't exists")
 
 
 class ProductMutations:
     create_product = CreateProduct.Field()
     delete_product = DeleteProduct.Field()
+    update_product = UpdateProduct.Field()
