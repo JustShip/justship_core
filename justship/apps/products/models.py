@@ -6,7 +6,7 @@ from django.conf import settings
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=255, null=True, blank=True)
     link = models.URLField(null=True, blank=True)
     state = models.CharField(max_length=10, default='building', choices=PRODUCT_STATE_CHOICES)
