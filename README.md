@@ -26,33 +26,113 @@ Este proyecto es de la comunidad para la comunidad. Si deseas contribuir monetar
 ## Estructura de carpetas:
 
     .
-    ├── config                      # Contiene todos los archivos de configuración
-    │   ├── settings                # Contiene la configuración
-    │   │   ├── base.py             # contiene las configuraciones base
-    │   │   ├── develop.py          # configuración específica para desarrollo
-    │   │   ├── production.py       # configuración específica para producción
-    │   │   └── staging.py          # configuración específica para staging
-    │   ├── asgi.py                 # configuración de despliegue asíncrono
-    │   ├── wsgi.py                 # configuración de despliegue
-    │   └── urls.py                 # raíz de las url del proyecto
-    ├── justship_core               # carpeta contenedora de aplicaciones
-    │   ├── accounts                # aplicación para gestionar cuentas
+    ├── apps                                # contiene todas las aplicaciones
+    │   ├── accounts                        # aplicación para gestionar cuentas
+    │   │   ├── api                         # contiene los GraphQL
+    │   │   │  ├── mutations.py             # mutaciones de GraphQL
+    │   │   │  ├── queries.py               # consultas de GraphQL
+    │   │   │  ├── schema.py                # esquema de  GraphQL
+    │   │   │  └── types.py                 # declaración de los tipos de modelos para GraphQL
+    │   │   ├── management                  # comandos personalizados
+    │   │   │   └── commands
+    │   │   │       └── inituseradmin.py
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── tests                       # carpeta contenedora de tests
+    │   │   │   ├── test_api_mutations.py
+    │   │   │   └── test_models.py
     │   │   ├── admin.py
     │   │   ├── apps.py
-    │   │   ├── models.py           # modelos
-    │   │   └── views.py            # vistas
-    │   └── core                    # aplicación núcleo del proyecto
-    │   │   ├── apps.py             
-    │   │   ├── middleware.py       # middlewares del núcleo
-    │   │   ├── models.py           # modelos básicos que pueden ser usados por cualquier aplicación
+    │   │   ├── constants.py                # constantes
+    │   │   ├── models.py                   # modelos de la BBDD
+    │   │   ├── urls.py
+    │   │   ├── utils.py                    # funciones útiles usadas por la aplicación accounts
     │   │   └── views.py
-    ├── requirements                # carpeta que contiene los requerimientos del proyecto
-    │   ├── base.txt                # requerimientos base
-    │   ├── develop.txt             # requerimientos para desarrollo
-    │   ├── production.txt          # requerimientos para producción
-    │   ├── staging.txt             # requerimientos para staging
-    │   └── test.txt                # requerimientos para testing
-    └── manage.py                   
+    │   ├── api                             # aplicación api
+    │   │   ├── tests                       # contiene todos los tests de api
+    │   │   ├── apps.py
+    │   │   └── schema.py                   # llama a todos los esquemas de todas las aplicaciones
+    │   ├── billing                         # aplicación de pagos
+    │   │   ├── api                         # contiene los GraphQL
+    │   │   │   ├── mutations.py            # mutaciones de GraphQL
+    │   │   │   ├── queries.py              # consultas de GraphQL
+    │   │   │   ├── schema.py               # esquema de  GraphQL
+    │   │   │   └── types.py                # declaración de los tipos de modelos para GraphQL
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── tests                       # test de la aplicación billing
+    │   │   ├── admin.py
+    │   │   ├── apps.py
+    │   │   ├── constants.py                # constantes de la aplicación
+    │   │   ├── models.py                   # modelos
+    │   │   └── views.py
+    │   ├── core                            # aplicación núcleo del proyecto
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── tests                       # tests
+    │   │   │   ├── test_forms.py
+    │   │   │   ├── test_middleware.py
+    │   │   │   ├── test_models.py
+    │   │   │   ├── test_validators.py
+    │   │   │   └── test_views.py
+    │   │   ├── apps.py
+    │   │   ├── middleware                  # middlewares del núcleo
+    │   │   ├── models.py                   # modelos básicos que pueden ser usados por cualquier aplicación
+    │   │   ├── urls.py
+    │   │   └── views.py
+    │   ├── mails                           # aplicación asíncrona para envíos de emails
+    │   │   ├── migrations                  # migraciones
+    │   │   ├── templates                   # plantillas de correos
+    │   │   │   └── mails
+    │   │   │       └── password_reset.html # plantilla de correo para reestablecer contraseña
+    │   │   ├── tests                       # tests de la aplicación
+    │   │   ├── admin.py
+    │   │   ├── apps.py
+    │   │   ├── constants.py                # constantes de la aplicación
+    │   │   ├── models.py                   # modelos
+    │   │   ├── recievers.py
+    │   │   └── tasks.py                    # métodos asícronos con Celery
+    │   ├── products                        # aplicación de productos
+    │   │   ├── api                         # contiene los GraphQL
+    │   │   │   ├── mutations.py            # mutaciones de GraphQL
+    │   │   │   ├── queries.py              # consultas de GraphQL
+    │   │   │   ├── schema.py               # esquema de  GraphQL
+    │   │   │   └── types.py                # declaración de los tipos de modelos para GraphQL
+    │   │   ├── migrations                  # migraciones Django
+    │   │   ├── tests                       # tests de la aplicación
+    │   │   ├── admin.py
+    │   │   ├── apps.py
+    │   │   ├── constants.py                # constantes
+    │   │   ├── models.py                   # modelos
+    │   │   └── views.py
+    │   └── resources                       # aplicación de recursos
+    │       ├── api                         # contiene los GraphQL
+    │       │   ├── mutations.py            # mutaciones de GraphQL
+    │       │   ├── queries.py              # consultas de GraphQL
+    │       │   ├── schema.py               # esquema de  GraphQL
+    │       │   └── types.py                # declaración de los tipos de modelos para GraphQL
+    │       ├── migrations                  # migraciones Django
+    │       ├── tests                       # tests de la aplicación
+    │       ├── admin.py
+    │       ├── apps.py
+    │       ├── models.py                   # modelos
+    │       └── views.py
+    ├── config                              # Contiene todos los archivos de configuración
+    │   ├── settings                        # Contiene la configuración
+    │   │   ├── base.py                     # contiene las configuraciones base
+    │   │   ├── develop.py                  # configuración específica para desarrollo
+    │   │   ├── production.py               # configuración específica para producción
+    │   │   └── staging.py                  # configuración específica para staging
+    │   ├── asgi.py                         # configuración de despliegue asíncrono
+    │   ├── celery
+    │   ├── wsgi.py                         # configuración de despliegue
+    │   └── urls.py                         # raíz de las url del proyecto
+    ├── requirements                        # carpeta que contiene los requerimientos del proyecto
+    │   ├── base.txt                        # requerimientos base
+    │   ├── develop.txt                     # requerimientos para desarrollo
+    │   ├── production.txt                  # requerimientos para producción
+    │   ├── staging.txt                     # requerimientos para staging
+    │   └── test.txt                        # requerimientos para testing
+    ├──tests
+    │  └── test_env_settings.py
+    └── manage.py
 
 
 ## Ejecutar
@@ -62,6 +142,11 @@ Ejecutar el proyecto localmente
 Para instalar las dependencias solo debe ejecutar:
 
     pip install -r requirements/develop.txt
+
+### Instalar pre-commit
+Instalar pre-commit para evitar posibles errores en el código antes del push
+
+    pre-commit install
 
 ### Base de datos
 Este proyecto en modo desarrollo usa SQlite por lo que solo tienes que ejecutar las migraciones:
@@ -97,6 +182,7 @@ Crea un fichero `.env` en la raíz del proyecto y agrega estas variables de ento
 - `EMAIL_HOST_USER` dirección de correo del email con el que se va a enviar correos electrónicos
 - `EMAIL_HOST_PASSWORD` contraseña de correo del email con el que se va a enviar correos electrónicos
 - `EMAIL_USE_TLS` boolean que indica si se va a usar el correo sobre TLS o no
+- `GOOGLE_RECAPTCHA_PRIVATE_KEY` llave privada de [Google Recaptcha](https://www.google.com/recaptcha/admin/)
 
 ### Ejecutar Docker
 Para crear la imagen de Docker:
@@ -109,8 +195,8 @@ Para crear y correr la imagen de docker:
 
 Para detener la imagen de docker:
 
-    docker-compose down  
-    
+    docker-compose down
+
 Para hacer despliegue rápido:
 
     ./build.sh

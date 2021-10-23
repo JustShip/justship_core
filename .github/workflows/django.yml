@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+env:
+  GOOGLE_RECAPTCHA_PRIVATE_KEY: ${{ secrets.GOOGLE_RECAPTCHA_PRIVATE_KEY }}
+
 jobs:
   build:
 

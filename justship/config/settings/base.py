@@ -32,6 +32,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'graphene_django',
+    'corsheaders',
 ]
 
 LOCAL_APPS = [
@@ -49,6 +50,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 ROOT_URLCONF = 'justship.config.urls'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -131,6 +133,39 @@ LANGUAGES = [
 
 ADMINS = [('Admin del sitio', 'admin@justship.to'), ]
 
+# CORS configuration
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'upgrade',
+    'connection',
+    'host',
+    'x-real-ip',
+    'x-forwarded-for',
+    'x-forwarded-host'
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # graphene configuration
 GRAPHENE = {
     'SCHEMA': 'justship.apps.api.schema.schema',
@@ -139,7 +174,5 @@ GRAPHENE = {
     ],
 }
 
-AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
+# Integrations
+GOOGLE_RECAPTCHA_PRIVATE_KEY = get_env_variable('GOOGLE_RECAPTCHA_PRIVATE_KEY')

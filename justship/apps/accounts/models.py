@@ -9,6 +9,8 @@ from django.utils import timezone
 
 from justship.apps.accounts import constants
 from justship.apps.core.models import TimeStampedModel
+from justship.apps.products import models as products_models
+from justship.apps.resources import models as resources_models
 
 
 class User(AbstractUser):
@@ -44,11 +46,20 @@ class User(AbstractUser):
 
     follows = models.ManyToManyField('self', through='Follow')
 
+    # followed products
+    followed_products = models.ManyToManyField(products_models.Product)
+
+    # saved_resources
+    saved_resources = models.ManyToManyField(resources_models.Resource)
+
     class Meta:
         ordering = ['username']
 
     def __str__(self) -> str:
         return self.get_full_name() or self.username
+    
+    def activate(self):
+        self.is_active = True
 
     def generate_temporal_code(self) -> str:
         """
@@ -83,3 +94,4 @@ class Follow(TimeStampedModel):
 
     def __str__(self) -> str:
         return '{} -> {}'.format(self.follower, self.followed)
+
