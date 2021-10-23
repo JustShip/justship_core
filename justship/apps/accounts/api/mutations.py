@@ -1,21 +1,20 @@
-import requests
 import graphene
 import graphql_jwt
-from graphql_jwt.decorators import login_required
-from graphql_jwt.utils import jwt_payload, jwt_encode
-from graphql_jwt.signals import token_issued
-from django.contrib.auth import get_user_model
+import requests
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from graphql import GraphQLError
+from graphql_jwt.decorators import login_required
+from graphql_jwt.signals import token_issued
+from graphql_jwt.utils import jwt_payload, jwt_encode
 
-from justship.apps.accounts.models import Follow
 from justship.apps.accounts.api.types import UserType
+from justship.apps.accounts.models import Follow
 from justship.apps.core import signals
+from justship.apps.mails.tasks import send_password_recovery_mail
 from justship.apps.products import models as product_models
 from justship.apps.resources import models as resources_models
-from justship.apps.mails.tasks import send_password_recovery_mail
-
 
 
 class TokenAuth(graphene.Mutation):
@@ -38,9 +37,8 @@ class TokenAuth(graphene.Mutation):
                 user = User.objects.get(email__iexact=username)
             else:
                 user = User.objects.get(username__iexact=username)
-           
-            if user.check_password(password) and user.is_active:
 
+            if user.check_password(password) and user.is_active:
                 # Response without first_login
                 payload = jwt_payload(user)
                 token = jwt_encode(payload)
@@ -50,13 +48,9 @@ class TokenAuth(graphene.Mutation):
                     request=info.context,
                     user=user
                 )
-
                 return TokenAuth(ok=True, token=token, user=user)
-
         except User.DoesNotExist:
-            pass
-
-        return TokenAuth(ok=False, user=None)
+            return TokenAuth(ok=False, user=None)
 
 
 class SignUp(graphene.Mutation):
@@ -73,19 +67,13 @@ class SignUp(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, token, email, password):
-
         if info.context.user.is_anonymous:
-
             User = get_user_model()
 
             try:
-
                 User.objects.get(email=email)
-
                 return SignUp(status='already-registered', user=None)
-            
             except User.DoesNotExist:
-
                 # Verify reCaptcha token
                 success = requests.post(
                     'https://www.google.com/recaptcha/api/siteverify',
@@ -98,7 +86,6 @@ class SignUp(graphene.Mutation):
                 ).json().get("success", False)
 
                 if success:
-
                     user = User.objects.create(
                         email=email,
                         is_active=False
@@ -111,13 +98,9 @@ class SignUp(graphene.Mutation):
                         sender=root.__class__,
                         user=user
                     )
-
                     return SignUp(status='ok', user=user)
-                
                 else:
-
                     return SignUp(status='forbidden', user=None)
-        
         return SignUp(status='forbidden', user=None)
 
 
@@ -133,18 +116,14 @@ class EmailCodeAuth(graphene.Mutation):
         email = graphene.String()
         code = graphene.String()
 
-    def mutate(self, info, email, code):        
-
+    def mutate(self, info, email, code):
         User = get_user_model()
 
         try:
-
             email = str(email).lower()
-
             user = User.objects.get(email=email)
 
             if user.temporal_code == code:
-            
                 user.activate()
                 user.temporal_code = None
                 user.save()
@@ -157,15 +136,11 @@ class EmailCodeAuth(graphene.Mutation):
                     request=info.context,
                     user=user
                 )
-
                 return EmailCodeAuth(status='ok', token=token, user=user)
-            
             else:
-
                 return EmailCodeAuth(status='wrong-code')
 
         except User.DoesNotExist:
-
             return EmailCodeAuth(status='forbidden')
 
 
@@ -258,6 +233,9 @@ class ChangePassword(graphene.Mutation):
 
 
 class FollowUser(graphene.Mutation):
+    """
+    Set a follow relation between two users
+    """
     ok = graphene.Boolean()
 
     class Arguments:
@@ -284,6 +262,9 @@ class FollowUser(graphene.Mutation):
 
 
 class UnfollowUser(graphene.Mutation):
+    """
+    Remove a relation between two users
+    """
     ok = graphene.Boolean()
 
     class Arguments:
@@ -311,6 +292,9 @@ class UnfollowUser(graphene.Mutation):
 
 
 class FollowProduct(graphene.Mutation):
+    """
+    Set a relation between user and product
+    """
     ok = graphene.Boolean()
 
     class Arguments:
@@ -338,6 +322,9 @@ class FollowProduct(graphene.Mutation):
 
 
 class UnfollowProduct(graphene.Mutation):
+    """
+    Remove a relation between user and product
+    """
     ok = graphene.Boolean()
 
     class Arguments:
@@ -380,7 +367,7 @@ class SaveResource(graphene.Mutation):
 
         if resource not in user.saved_resources.all():
             user.saved_resources.add(resource)
-            user.save
+            # user.save()
             return SaveResource(ok=True)
         else:
             return GraphQLError("Already saved")
@@ -403,7 +390,7 @@ class DeleteSavedResource(graphene.Mutation):
 
         if resource in user.saved_resources.all():
             user.saved_resources.remove(resource)
-            user.save
+            # user.save()
             return DeleteSavedResource(ok=True)
         else:
             return GraphQLError("Resource doesn't exists on user saved_resources list ")
