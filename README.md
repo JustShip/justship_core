@@ -182,6 +182,7 @@ Crea un fichero `.env` en la raíz del proyecto y agrega estas variables de ento
 - `EMAIL_HOST_USER` dirección de correo del email con el que se va a enviar correos electrónicos
 - `EMAIL_HOST_PASSWORD` contraseña de correo del email con el que se va a enviar correos electrónicos
 - `EMAIL_USE_TLS` boolean que indica si se va a usar el correo sobre TLS o no
+- `GOOGLE_RECAPTCHA_PRIVATE_KEY` llave privada de [Google Recaptcha](https://www.google.com/recaptcha/admin/)
 
 ### Ejecutar Docker
 Para crear la imagen de Docker:
